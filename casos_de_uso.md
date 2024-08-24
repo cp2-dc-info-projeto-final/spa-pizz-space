@@ -39,7 +39,6 @@ Cadastro de Administradores
 5. O sistema verifica se os dados são válidos.
 6. O sistema informa que os dados já estão registrados.
 7. O sistema nega o cadastro.
-8. O sistema exibe a mensagem "Cadastro já registrado".
 
 ### CDU 02
 Cadastro de Funcionários
@@ -65,7 +64,6 @@ Cadastro de Funcionários
 5. O sistema verifica se os dados são válidos.
 6. O sistema informa que os dados já estão registrados.
 7. O sistema nega o cadastro.
-8. O sistema exibe a mensagem "Cadastro já registrado".
 
 ### CDU 03
 Cadastro de Clientes
@@ -76,7 +74,7 @@ Cadastro de Clientes
 
 1. O cliente clica no botão "Cadastro" na página inicial.
 2. O cliente é encaminhado para a página de cadastro de clientes.
-3. O cliente insere os dados solicitados: nome completo, CPF, data de nascimento, número de celular, email e senha.
+3. O cliente insere os dados solicitados: nome completo, data de nascimento, número de celular, email e senha.
 4. O cliente clica em "Realizar cadastro".
 5. O sistema verifica se os dados são válidos.
 6. O sistema registra os dados no banco de dados.
@@ -86,12 +84,12 @@ Cadastro de Clientes
 
 1. O cliente clica no botão "Cadastro" na página inicial.
 2. O cliente é encaminhado para a página de cadastro de clientes.
-3. O cliente insere os dados solicitados: nome completo, CPF, data de nascimento, número de celular, email e senha.
+3. O cliente insere os dados solicitados: nome completo, data de nascimento, número de celular, email e senha.
 4. O cliente clica em "Realizar cadastro".
 5. O sistema verifica se os dados são válidos.
-6. As seguintes informações já estão cadastradas: CPF, telefone ou email.
-7. O sistema exibe a mensagem "Os dados inseridos já estão cadastrados".
-8. O cliente repete o processo de cadastro.
+6. As seguintes informações já estão cadastradas: telefone ou email.
+7. O sistema nega o cadastro.
+8. O sistema exibe a mensagem "Os dados inseridos já estão cadastrados".
 
 ### CDU 04
 Login de Usuários
@@ -109,13 +107,14 @@ Login de Usuários
 
 **Fluxo alternativo A**
 
-1. O usuário clica no botão "Login" na página inicial.
-2. O usuário é direcionado para a página de login.
-3. O usuário insere login e senha.
+1. O cliente clica no botão "Login" na página inicial.
+2. O cliente é direcionado para a página de login.
+3. O cliente insere login e senha.
 4. O sistema verifica se os dados são válidos.
-5. A seguinte informação não está cadastrada: CPF.
-6. O sistema exibe a mensagem "Usuário Não Cadastrado".
-7. O cliente é encaminhado para a página de cadastro.
+5. A seguinte informação não está cadastrada: email.
+6. O sistema nega acesso.
+7. O sistema exibe a mensagem "Usuário Não Cadastrado".
+8. O cliente é encaminhado para a página de cadastro.
 
 **Fluxo alternativo B**
 
@@ -152,19 +151,17 @@ Cadastros de Serviços
 
 1. O administrador insere nome, tipo de serviço e descrição.
 2. O sistema verifica se os dados são válidos.
-3. O sistema avalia os dados.
-4. O sistema insere o serviço no banco de dados.
-5. Serviços são atualizados.
-6. O sistema exibe a mensagem "Serviço cadastrado com sucesso!".
+3. O sistema insere o serviço no banco de dados.
+4. Serviços são atualizados.
+5. O sistema exibe a mensagem "Serviço cadastrado com sucesso!".
 
 **Fluxo Alternativo A**
 
 1. O administrador insere nome, tipo de serviço e descrição.
 2. O sistema verifica se os dados são válidos.
-3. O sistema avalia os dados.
-4. O sistema consulta o banco de dados.
-5. Serviço já está cadastrado.
-6. O sistema exibe a mensagem "Serviço já cadastrado".
+3. O sistema consulta o banco de dados.
+4. Serviço já está cadastrado.
+5. O sistema exibe a mensagem "Serviço já cadastrado".
 
 ### CDU 06
 Disponibilização de Datas e Horários
@@ -195,7 +192,7 @@ Disponibilização de Datas e Horários
 7. O sistema verifica se os dados são válidos.
 8. O horário inserido já está cadastrado ou já possui um agendamento.
 9. O sistema não permite a atualização.
-10. O sistema exibe a mensagem:"Este horário já está cadastrado ou já possui um agendamento".    
+10. O sistema exibe a mensagem: "Este horário já está cadastrado ou já possui um agendamento".    
 
 
 ### CDU 07
@@ -207,7 +204,7 @@ Agendamento de Serviços
 
 1. O cliente clica em "Agendamento" na página inicial.
 2. O cliente é encaminhado para a página de agendamento.
-3. O cliente escolhe serviço e horário.
+3. O cliente escolhe o serviço e horário.
 4. O cliente finaliza o agendamento.
 5. O sistema verifica se os dados são válidos.
 6. O sistema registra os dados no banco de dados.
@@ -218,7 +215,7 @@ Agendamento de Serviços
 
 1. O cliente clica em "Agendamento" na página inicial.
 2. O cliente é encaminhado para a página de agendamento.
-3. O cliente escolhe serviço e horário.
+3. O cliente escolhe o serviço e horário.
 4. O cliente finaliza o agendamento.
 5. O sistema verifica se os dados são válidos.
 6. O cliente não possui cadastro ou não está logado.
@@ -256,6 +253,16 @@ Recuperar senha
 9. O cliente é direcionado para a página de recuperação de senha.
 10. O cliente digita nova senha.
 11. O sistema registra a nova senha.
+
+**Fluxo alternativo A**
+
+1. O cliente clica no botão "Esqueceu a senha?" no formulário de login.
+2. O cliente é direcionado para a página de confirmação do email.
+3. O cliente insere o email.
+4. O sistema verifica se os dados são válidos.
+5. O email não está cadastrado.
+6. O sistema exibe a mensagem: "Email inválido!".
+7. O cliente é redirecionado para a página de confirmação de email.
 
 ### CDU 10
 Visualizar Perfil
