@@ -1,7 +1,7 @@
 CREATE TABLE usuario(
-    nome text, 
-    email text,
-    data_nasc date,
-    num_cell numeric VARCHAR(11),
-    senha text
+    nome text NOT NULL, 
+    email text NOT NULL UNIQUE,
+    data_nasc date NOT NULL,
+    num_cell numeric NOT NULL UNIQUE,
+    senha text NOT NULL
     );
