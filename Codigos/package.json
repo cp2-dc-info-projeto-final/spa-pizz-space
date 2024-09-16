@@ -1,19 +1,19 @@
 {
-  "name": "tcc",
-  "version": "1.0.0",
-  "main": "ServerCadastro.js",
-  "scripts": {
-    "start": "nodemon ServerCadastro.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "bootstrap": "^5.3.3",
-    "express": "^4.19.2",
-    "nodemon": "^3.1.4",
-    "sqlite3": "^5.1.7"
-  }
+	"name": "frontend",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@fontsource/fira-mono": "^5.0.0",
+		"@neoconfetti/svelte": "^2.0.0",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"svelte": "^4.2.7",
+		"vite": "^5.0.3"
+	},
+	"type": "module"
 }
