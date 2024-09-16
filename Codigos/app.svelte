@@ -77,6 +77,25 @@
       }
       
     };
+
+    const deletarUsuario = async (id) => {
+    try {
+      let res = await axios.delete(`${api_base_url}/usuarios/${id}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      resultado = res.data;
+      error = null;
+      // recarrega lista de usuários apresentada
+      carregarUsuarios();
+    } catch (err) {
+      error =
+        "Erro ao deletar usuário: " +
+        (err.response?.data?.message || err.message);
+      resultado = null;
+    }
+  };
   
     carregarUsuarios();
   </script>
@@ -159,4 +178,30 @@
         {/if}
       </div>
     </div>
-  </main>
+    <div class="card">
+    {#if usuarios}
+      <table>
+        <thead>
+          <tr>
+            {#each colunas_usuarios as nome_coluna}
+              <th>{nome_coluna}</th>
+            {/each}
+            <th></th>
+          </tr><tr />
+        </thead>
+        <tbody>
+          {#each Object.values(usuarios) as linha_usuario}
+            <tr>
+              {#each colunas_usuarios as atributo}
+                <td>{linha_usuario[atributo]}</td>
+              {/each}
+              <td>
+                <button on:click={() => deletarUsuario(linha_usuario.id_usuario)}>Remover</button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {/if}
+  </div>
+</main>
