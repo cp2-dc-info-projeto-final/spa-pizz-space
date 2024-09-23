@@ -187,7 +187,7 @@
             <th>{nome_coluna}</th>
           {/each}
           <th></th>
-        </tr><tr />
+        </tr><tr/>
       </thead>
       <tbody>
         {#each Object.values(usuarios) as linha_usuario}
