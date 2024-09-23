@@ -100,9 +100,9 @@
   carregarUsuarios();
 </script>
 
-<main>
+<main class="container-fluid p-5 bg-custom text-black text-center">
   <div>
-    <div class="formulario">
+    <div class="formulario container p-4 my-5 border bg-custom2 text-black text-center">
       <h2>Cadastrar Usuário</h2>
       <form on:submit|preventDefault={cadastrarUsuario}>
         <div>
