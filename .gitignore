@@ -25,6 +25,7 @@ src/frontend-app/node_modules
 *.sln
 *.sw?
 
+
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db
