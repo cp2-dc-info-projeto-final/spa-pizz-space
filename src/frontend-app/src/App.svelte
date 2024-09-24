@@ -11,7 +11,7 @@
   let resultado = null;
   let usuarios = null;
   let colunas_usuarios = null;
-  const api_base_url = "http://localhost:8080";
+  const api_base_url = "http://localhost:3000";
 
   const getDataHelloWorld = async () => {
     try {
