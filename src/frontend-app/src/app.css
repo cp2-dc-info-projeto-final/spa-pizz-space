@@ -1,7 +1,9 @@
-.bg-custom {
-    background-color: #bb99ff;
-  }
-  
-.bg-custom2 {
-    background-color: #ADD8E6;
-  }
+.div1{
+  background-color: #bb99ff;
+  text-align: center;
+}
+
+.div2{
+  background-color: #ADD8E6;
+  text-align: center;
+}

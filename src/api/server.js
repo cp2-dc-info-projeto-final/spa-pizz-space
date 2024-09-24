@@ -126,6 +126,7 @@ app.post('/usuarios/novo', (req, res) => {
 
 app.delete('/usuarios/:id_usuario', (req, res) => {
   const { id_usuario } = req.params;
+  console.log("chegou aqui: "+id_usuario);
 
   // Conectar ao banco de dados SQLite
   let db = new sqlite3.Database(databasePath, (err) => {
