@@ -1,6 +1,7 @@
 <script>
   // import { onMount } from 'svelte';
   import axios from "axios";
+  import Login from './login.svelte';
   let nome = "";
   let email = "";
   let data_nasc = "";
@@ -96,12 +97,32 @@
       (err.response?.data?.message || err.message);
     resultado = null;
   }
-};
+  };
+
+  async function updateItem() {
+      const response = await fetch(`http://localhost:3000/usuarios/${usuario.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: usuario.name })
+      });
+
+      if (response.ok) {
+        alert('Item atualizado com sucesso!');
+      } else {
+        alert('Erro ao atualizar o item');
+      }
+    };
+
+  onMount(fetchItem);
 
   carregarUsuarios();
 </script>
 
 <main>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <div class="div1">
     <div>
       <h2>Cadastrar Usuário</h2>
@@ -178,7 +199,12 @@
         <p style="color: green;">{resultado.message}</p>
       {/if}
     </div>
-</div>
+  </div>
+
+    <h1>Editar Item</h1>
+    <input type="text" bind:value={usuario.name} />
+    <button on:click={updateUsuario}>Atualizar</button>
+
   <div class="card">
   {#if usuarios}
     <table>
@@ -205,4 +231,5 @@
     </table>
   {/if}
 </div>
+  <Login />
 </main>

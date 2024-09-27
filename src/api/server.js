@@ -1,27 +1,25 @@
 const express = require('express');
 const cors = require('cors');
-
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require("bcryptjs")
-
 const app = express();
 app.use(express.json());
 const port = 3000;
 const databasePath = 'db/banco.db';
 
-function geraNumeroAleatorio(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
 
 app.use(cors());
 
-app.get('/hello', (req, res) => {
-  let aleatorio = geraNumeroAleatorio(0,100);
-  res.status(200).json({
-    texto_completo:`Olá mundo! Sorteei o número ${aleatorio}!`,
-    saudacao: 'Olá mundo!',
-    numero: aleatorio
-  });
+app.put('/usuarios/:id', (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const usuario = data.find(usuario => usuario.id === parseInt(id));
+  if (usuario) {
+    usuario.name = name;
+    res.json(usuario);
+  } else {
+    res.status(404).send('Usuário não encontrado!');
+  }
 });
 
 app.get('/usuarios', (req, res) => {
