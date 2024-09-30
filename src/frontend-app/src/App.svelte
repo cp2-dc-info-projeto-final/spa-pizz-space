@@ -99,23 +99,6 @@
   }
   };
 
-  async function updateUsuario() {
-      const response = await fetch(`http://localhost:3000/usuarios/${usuarios.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: usuarios.name })
-      });
-
-      if (response.ok) {
-        alert('Usuário atualizado com sucesso!');
-      } else {
-        alert('Erro ao atualizar o usuário');
-      }
-    };
-
-  onMount();
 
   carregarUsuarios();
 </script>
@@ -200,10 +183,6 @@
       {/if}
     </div>
   </div>
-
-    <h1>Editar Item</h1>
-    <input type="text" bind:value={usuarios.name} />
-    <button on:click={updateUsuario}>Atualizar</button>
 
   <div class="card">
   {#if usuarios}
