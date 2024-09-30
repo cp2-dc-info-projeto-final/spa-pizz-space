@@ -99,23 +99,23 @@
   }
   };
 
-  async function updateItem() {
-      const response = await fetch(`http://localhost:3000/usuarios/${usuario.id}`, {
+  async function updateUsuario() {
+      const response = await fetch(`http://localhost:3000/usuarios/${usuarios.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: usuario.name })
+        body: JSON.stringify({ name: usuarios.name })
       });
 
       if (response.ok) {
-        alert('Item atualizado com sucesso!');
+        alert('Usuário atualizado com sucesso!');
       } else {
-        alert('Erro ao atualizar o item');
+        alert('Erro ao atualizar o usuário');
       }
     };
 
-  onMount(fetchItem);
+  onMount();
 
   carregarUsuarios();
 </script>
@@ -202,7 +202,7 @@
   </div>
 
     <h1>Editar Item</h1>
-    <input type="text" bind:value={usuario.name} />
+    <input type="text" bind:value={usuarios.name} />
     <button on:click={updateUsuario}>Atualizar</button>
 
   <div class="card">
