@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 const databasePath = 'db/banco.db';
-
+const data = "";
 
 app.use(cors());
 

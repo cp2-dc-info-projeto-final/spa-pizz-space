@@ -2,6 +2,8 @@
   // import { onMount } from 'svelte';
   import axios from "axios";
   import Login from './login.svelte';
+  import Adm from "./adm.svelte";
+  import Editar from "./editar.svelte";
   let nome = "";
   let email = "";
   let data_nasc = "";
@@ -164,4 +166,6 @@
   </div>
 
   <Login />
+  <Adm />
+  <Editar />
 </main>

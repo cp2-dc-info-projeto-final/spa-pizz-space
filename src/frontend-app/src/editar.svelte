@@ -1,61 +1,62 @@
 <script>
-    import axios from "axios";
-    let nome = "";
-    let email = "";
-    let num_cell = "";
-    let senha = "";
-    let error = null;
-    let resultado = null;
-    let usuarios = null;
-    let colunas_usuarios = null;
-    const api_base_url = "http://localhost:3000";
+  import axios from "axios";
+  let nome = "";
+  let email = "";
+  let num_cell = "";
+  let senha = "";
+  let error = null;
+  let resultado = null;
+  let usuarios = null;
+  let colunas_usuarios = null;
+  const api_base_url = "http://localhost:3000";
 
-
-    const carregarUsuarios = async () => {
-        try {
-        let res = await axios.get(api_base_url + "/usuarios", {
-            responseType: "json",
-            headers: {
-            Accept: "application/json",
-            },
-        });
-        usuarios = res.data.usuarios;
-        colunas_usuarios = Object.keys(usuarios[0]);
-        error = null; // Limpa o erro se a requisição for bem-sucedida
-        } catch (err) {
-        error = "Erro ao buscar dados: " + err.response?.data?.message || err.message;;
-        console.error(err);
-        usuarios = null; // Limpa o resultado em caso de erro
-        }
-    };
-
-    const updateUsuario = async (id) => {
-    try {
-        let res = await axios.put(`${api_base_url}/usuarios/${id}`,
-        {
-          nome,
-          email,
-          num_cell,
-          senha,
-        },
-        {
+  const carregarUsuarios = async () => {
+      try {
+      let res = await axios.get(api_base_url + "/usuarios", {
+          responseType: "json",
           headers: {
-            Accept: "application/json",
+          Accept: "application/json",
           },
-        },
-      );
-    resultado = res.data;
-    error = null;
-    // recarrega lista de usuários apresentada
-    carregarUsuarios();
-    } catch (err) {
-        error =
-        "Erro ao atualizar o usuário: " +
-        (err.response?.data?.message || err.message);
-        resultado = null;
-    }
-    };
+      });
 
+      usuarios = res.data.usuarios;
+      colunas_usuarios = Object.keys(usuarios[0]);
+      error = null; // Limpa o erro se a requisição for bem-sucedida
+      } catch (err) {
+      error = "Erro ao buscar dados: " + err.response?.data?.message || err.message;;
+      console.error(err);
+      usuarios = null; // Limpa o resultado em caso de erro
+      }
+  };
+
+  const updateUsuario = async (id) => {
+  try {
+      let res = await axios.put(`${api_base_url}/usuarios/${id}`,
+      {
+        nome,
+        email,
+        num_cell,
+        senha,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      },
+    );
+  resultado = res.data;
+  error = null;
+  // recarrega lista de usuários apresentada
+  carregarUsuarios();
+  } catch (err) {
+      error =
+      "Erro ao atualizar o usuário: " +
+      (err.response?.data?.message || err.message);
+      resultado = null;
+  }
+  };
+
+  carregarUsuarios();
 </script>
 
 <main>
