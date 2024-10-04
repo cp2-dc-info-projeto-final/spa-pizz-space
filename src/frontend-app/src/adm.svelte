@@ -4,6 +4,10 @@ let error = null;
 let resultado = null;
 let usuarios = null;
 let colunas_usuarios = null;
+let nome = "";
+let email = "";
+let num_cell = "";
+let senha = "";
 const api_base_url = "http://localhost:3000";
 
 
@@ -42,6 +46,32 @@ const carregarUsuarios = async () => {
     }
   };
 
+  const updateUsuario = async (id) => {
+  try {
+      let res = await axios.put(`${api_base_url}/usuarios/${id}`,
+      {
+        nome,
+        email,
+        num_cell,
+        senha,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      },
+    );
+  resultado = res.data;
+  error = null;
+  // recarrega lista de usuários apresentada
+  carregarUsuarios();
+  } catch (err) {
+      error =
+      "Erro ao atualizar o usuário: " +
+      (err.response?.data?.message || err.message);
+      resultado = null;
+  }
+  };
 
 const deletarUsuario = async (id) => {
     console.log ("O id do usuario é: "+id);
@@ -86,6 +116,7 @@ const deletarUsuario = async (id) => {
                   {/each}
                   <td>
                     <button on:click={() => deletarUsuario(linha_usuario.id_usuario)}>Remover</button>
+                    <button on:click={() => updateUsuario(linha_usuario.id_usuario)}>Editar</button>
                   </td>
                 </tr>
               {/each}

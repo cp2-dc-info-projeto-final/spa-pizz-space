@@ -6,20 +6,36 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 const databasePath = 'db/banco.db';
-const data = "";
 
 app.use(cors());
+
+// Função auxiliar para conectar ao banco de dados
+const connectToDatabase = () => {
+  return new sqlite3.Database(databasePath, (err) => {
+    if (err) {
+      console.error(err.message);
+      throw new Error('Não foi possível conectar ao banco de dados');
+    }
+  });
+};
 
 app.put('/usuarios/:id', (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const usuario = data.find(usuario => usuario.id === parseInt(id));
-  if (usuario) {
-    usuario.name = name;
-    res.json(usuario);
-  } else {
-    res.status(404).send('Usuário não encontrado!');
-  }
+
+  let db = connectToDatabase();
+  db.run('UPDATE usuario SET nome = ? WHERE id_usuario = ?', [name, id], function(err) {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao atualizar usuário!',
+        error: err.message
+      });
+    }
+    res.json({ id, name });
+  });
+
+  db.close(); 
 });
 
 app.get('/usuarios', (req, res) => {
@@ -47,7 +63,7 @@ app.get('/usuarios', (req, res) => {
       }
       console.log('Fechou a conexão com o banco de dados.');
     });
-
+    
     // Retorna os dados dos usuários em formato JSON
     res.status(200).json({
       status: 'success',
@@ -55,7 +71,6 @@ app.get('/usuarios', (req, res) => {
     });
   });
 });
-
 
 app.post('/usuarios/novo', (req, res) => {
   const { nome, email, senha, conf_senha, data_nasc, num_cell } = req.body;
