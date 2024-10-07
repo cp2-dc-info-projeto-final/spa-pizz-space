@@ -178,7 +178,46 @@ app.delete('/usuarios/:id_usuario', (req, res) => {
   });
 });
 
-  
+app.put('/usuarios/:id_usuario', (req, res) => {
+  const { nome, email, senha, num_cell } = req.params;
+  console.log("chegou aqui: "+id_usuario);
+
+  // Conectar ao banco de dados SQLite
+  let db = new sqlite3.Database(databasePath, (err) => {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao conectar ao banco de dados!',
+        error: err.message
+      });
+    }
+    console.log('Conectou no banco de dados!');
+  });
+
+  // atualizar o usuário pelo ID
+  db.run('UPDATE SET nome = ?, email = ?, num_cell = ?, senha = ? FROM usuario WHERE id_usuario = ?', [nome, email, num_cell, senha, id_usuario], function (err) {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao tentar atualizar o usuário ${id_usuario}!',
+        error: err.message
+      });
+    }
+    // Fechar a conexão com o banco de dados
+    db.close((err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Fechou a conexão com o banco de dados.');
+    });
+
+    // Retornar uma resposta de sucesso
+    return res.status(200).json({
+      status: 'success',
+      message: `Usuário com id ${id_usuario} atualizado com sucesso!`
+    });
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

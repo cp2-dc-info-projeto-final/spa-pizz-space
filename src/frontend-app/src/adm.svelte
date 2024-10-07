@@ -97,6 +97,7 @@ const deletarUsuario = async (id) => {
   carregarUsuarios();
 </script>
 <main>
+  <link href="menu.scss" rel="stylesheet">
     <div class="card">
         {#if usuarios}
           <table>
