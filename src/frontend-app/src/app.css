@@ -61,3 +61,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+.form-container {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}

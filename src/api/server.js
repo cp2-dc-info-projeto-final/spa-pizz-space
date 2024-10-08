@@ -195,11 +195,12 @@ app.put('/usuarios/:id_usuario', (req, res) => {
   });
 
   // atualizar o usuário pelo ID
-  db.run('UPDATE SET nome = ?, email = ?, num_cell = ?, senha = ? FROM usuario WHERE id_usuario = ?', [nome, email, num_cell, senha, id_usuario], function (err) {
+  db.run('UPDATE usuario SET nome = ?, email = ?, num_cell = ?, senha = ? FROM usuario WHERE id_usuario = ?', [nome, email, num_cell, senha, id_usuario], function (err) {
+    alert('oi');
     if (err) {
       return res.status(500).json({
         status: 'failed',
-        message: 'Erro ao tentar atualizar o usuário ${id_usuario}!',
+        message: `Erro ao tentar atualizar o usuário ${id_usuario}!`,
         error: err.message
       });
     }

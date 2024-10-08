@@ -4,6 +4,13 @@ let error = null;
 let resultado = null;
 let usuarios = null;
 let colunas_usuarios = null;
+let editando = false;
+let formData = {
+    nome: '',
+    email: '',
+    num_cell: '',
+    senha: ''
+  };
 let nome = "";
 let email = "";
 let num_cell = "";
@@ -48,19 +55,19 @@ const carregarUsuarios = async () => {
 
   const updateUsuario = async (id) => {
   try {
-      let res = await axios.put(`${api_base_url}/usuarios/${id}`,
-      {
-        nome,
-        email,
-        num_cell,
-        senha,
-      },
-      {
+      let res = await axios.put(`${api_base_url}/usuarios/${id}`, formData, {
         headers: {
           Accept: "application/json",
         },
-      },
-    );
+      });
+
+      // Verifica se a atualização foi bem-sucedida
+      if (res.status === 200) {
+        console.log('Usuário atualizado:', res.data);
+        alternar(); // Fecha o formulário após o envio
+      } else {
+        console.error('Erro ao atualizar o usuário:', res.statusText);
+      }
   resultado = res.data;
   error = null;
   // recarrega lista de usuários apresentada
@@ -72,6 +79,17 @@ const carregarUsuarios = async () => {
       resultado = null;
   }
   };
+
+  function alternar() {
+    editando = !editando;
+  }
+
+  function enviar() {
+    // Lógica para processar os dados do formulário
+    console.log('Dados do formulário:', formData);
+    alternar(); // Fecha o formulário após o envio
+  }
+
 
 const deletarUsuario = async (id) => {
     console.log ("O id do usuario é: "+id);
@@ -118,7 +136,32 @@ const deletarUsuario = async (id) => {
                   {/each}
                   <td>
                     <button on:click={() => deletarUsuario(linha_usuario.id_usuario)}>Remover</button>
-                    <button on:click={() => updateUsuario(linha_usuario.id_usuario)}>Editar</button>
+                    <button on:click={alternar}>
+                      {editando ? 'Cancelar' : 'Editar'}
+                    </button>
+                    {#if editando}
+                      <div class="form-container">
+                        <form on:submit|preventDefault={enviar}>
+                          <label>
+                            Nome:
+                            <input type="text" bind:value={formData.nome} required />
+                          </label>
+                          <label>
+                            Email:
+                            <input type="email" bind:value={formData.email} required />
+                          </label>
+                          <label>
+                            Número de celular:
+                            <input type="text" bind:value={formData.num_cell} required />
+                          </label>
+                          <label>
+                            Senha:
+                            <input type="password" bind:value={formData.senha} required />
+                          </label>
+                          <button type="submit">Salvar</button>
+                        </form>
+                      </div>
+                    {/if}
                   </td>
                 </tr>
               {/each}
