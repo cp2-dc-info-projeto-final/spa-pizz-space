@@ -54,8 +54,9 @@ const carregarUsuarios = async () => {
   };
 
   const updateUsuario = async (id) => {
+    console.log ("O id do usuario é: "+id);
   try {
-      let res = await axios.put(`${api_base_url}/usuarios/${id}`, formData, {
+      let res = await axios.post(`${api_base_url}/usuarios/${id}`, formData, {
         headers: {
           Accept: "application/json",
         },
@@ -87,6 +88,7 @@ const carregarUsuarios = async () => {
   function enviar() {
     // Lógica para processar os dados do formulário
     console.log('Dados do formulário:', formData);
+    updateUsuario();
     alternar(); // Fecha o formulário após o envio
   }
 
@@ -141,7 +143,7 @@ const deletarUsuario = async (id) => {
                     </button>
                     {#if editando}
                       <div class="form-container">
-                        <form on:submit|preventDefault={enviar}>
+                        <form on:submit|preventDefault={() => updateUsuario(linha_usuario.id_usuario)}>
                           <label>
                             Nome:
                             <input type="text" bind:value={formData.nome} required />
