@@ -7,7 +7,10 @@
   const port = 3000;
   const databasePath = 'db/banco.db';
 
-  app.use(cors());
+  app.use(cors({
+    origin: 'http://127.0.0.1:5173/', // Habilita apenas URL do frontend svelte
+    credentials: true, 
+  }));
 
   // Função auxiliar para conectar ao banco de dados
   const connectToDatabase = () => {

@@ -88,9 +88,10 @@
     <div>
       <h2>Cadastrar Usuário</h2>
       <form on:submit|preventDefault={cadastrarUsuario}>
-        <div>
+        <div class="form-group col-md-4">
           <label for="nome">Nome:</label>
           <input
+            class ="form-control"
             type="text"
             id="nome"
             bind:value={nome}
@@ -98,9 +99,10 @@
             required
           />
         </div>
-        <div>
+        <div class="form-group col-md-4">
           <label for="email">Email:</label>
           <input
+            class="form-control"
             type="email"
             id="email"
             bind:value={email}
@@ -108,9 +110,10 @@
             required
           />
         </div>
-        <div>
+        <div class="form-group col-md-4">
           <label for="data_nasc">Data de nascimento:</label>
           <input
+            class="form-control"
             type="date"
             id="data_nasc"
             bind:value={data_nasc}
@@ -118,9 +121,10 @@
             required
           />
         </div>
-        <div>
+        <div class="form-group col-md-4">
           <label for="num_cell">Número de celular:</label>
           <input
+            class="form-control"
             type="num"
             id="num_cell"
             bind:value={num_cell}
@@ -128,9 +132,10 @@
             required
           />
         </div>
-        <div>
+        <div class="form-group col-md-4">
           <label for="senha">Senha:</label>
           <input
+            class="form-control"
             type="password"
             id="senha"
             bind:value={senha}
@@ -138,9 +143,10 @@
             required
           />
         </div>
-        <div>
+        <div class="form-group col-md-4">
           <label for="conf_senha">Confirme a Senha:</label>
           <input
+            class="form-control"
             type="password"
             id="conf_senha"
             bind:value={conf_senha}
