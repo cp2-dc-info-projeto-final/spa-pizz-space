@@ -1,16 +1,28 @@
-  const express = require('express');
-  const cors = require('cors');
-  const sqlite3 = require('sqlite3').verbose();
-  const bcrypt = require("bcryptjs")
-  const app = express();
-  app.use(express.json());
-  const port = 3000;
-  const databasePath = 'db/banco.db';
+const dotenv = require('dotenv').config()
+
+const express = require('express');
+const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require("bcryptjs")
+const app = express();
+app.use(express.json());
+const port = 3000;
+const databasePath = 'db/banco.db';
+
+const { SECRET_ACCESS_TOKEN, NODE_ENV } = process.env;
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
 
   app.use(cors({
     origin: 'http://127.0.0.1:5173/', // Habilita apenas URL do frontend svelte
     credentials: true, 
   }));
+
+  app.disable("x-powered-by");
+  app.use(cookieParser());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
 
   // Função auxiliar para conectar ao banco de dados
   const connectToDatabase = () => {
@@ -22,7 +34,57 @@
     });
   };
 
-  app.get('/usuarios', (req, res) => {
+  function geraAcessoJWT(idUsuario) {
+    let payload = {
+      idUsuario: idUsuario
+    };
+    return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
+      expiresIn: '5m',
+    });
+  };
+
+  async function login(req, res) {
+    let db = connectToDatabase();
+  
+    const { email, senha } = req.body;
+  
+    // recupera a senha do usuário que está tentando fazer login
+    db.get('SELECT id_usuario, senha FROM usuario WHERE email = ?', [email], async (error, result) => {
+      if (error) {
+        console.log(error)
+      }
+      else if (result) {
+        let idUsuario = result.id_usuario;
+        let senhaCorreta = await bcrypt.compare(senha, result.senha)
+        if (!senhaCorreta) {
+          return res.status(401).json({
+            status: 'failed',
+            message: 'Login ou senha incorretos!',
+          });
+        }
+        let options = {
+          maxAge: 5 * 60 * 1000, // minutos * segundos * milissegundos = total 20 minutos
+          httpOnly: true, // restringe acesso de js ao cookie
+          secure: NODE_ENV === 'production' ? true : false, // secure ativado de acordo com ambiente (desenvolvimento/produção) para uso do https
+          sameSite: "Lax", // habilita compartilhamento de cookie entre páginas
+        };
+  
+        console.log(`secure: ${options.secure}`);
+  
+        const token = geraAcessoJWT(idUsuario); // gera um token de sessão para o usuário
+  
+        console.log(`Usuário ${email} logado com sucesso!\nToken: ${token}`);      
+  
+        // após realizar login, vá nas ferramentas do desenvolvedor do navegador, na aba Application, em Cookies, e veja o cookie SessionID
+        res.cookie("SessionID", token, options); // preenche o token na resposta para ser utilizado pelo cliente nas próximas requisições
+          res.status(200).json({
+              status: "success",
+              message: "Autenticação realizada com sucesso!",
+          });
+      };
+  
+
+  app.get('/usuarios', verificaToken, (req, res) => {
     let db = new sqlite3.Database(databasePath, (err) => {
       if (err) {
         return console.error(err.message);
@@ -56,7 +118,7 @@
     });
   });
 
-  app.post('/usuarios/novo', (req, res) => {
+  app.post('/usuarios/novo', verificaToken, (req, res) => {
     const { nome, email, senha, conf_senha, data_nasc, num_cell } = req.body;
     console.log(req);
     // Aqui começa a validação dos campos do formulário
@@ -121,7 +183,7 @@
     }
   });
 
-  app.delete('/usuarios/:id_usuario', (req, res) => {
+  app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
     const { id_usuario } = req.params;
     console.log("chegou aqui: "+id_usuario);
 
@@ -162,7 +224,7 @@
     });
   });
 
-  app.post('/usuarios/:id_usuario', async (req, res) => {
+  app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
     const { id_usuario } = req.params;
     const { nome, email, senha, num_cell } = req.body;
 
@@ -190,4 +252,4 @@
   });
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
-  });
+    });
