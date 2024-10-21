@@ -1,5 +1,4 @@
 const dotenv = require('dotenv').config()
-
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -8,7 +7,6 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 const databasePath = 'db/banco.db';
-
 const { SECRET_ACCESS_TOKEN, NODE_ENV } = process.env;
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -44,7 +42,7 @@ function geraAcessoJWT(idUsuario) {
 };
 
 async function login(req, res) {
-  let db = connectToDatabase();
+  let db = databasePath();
 
   const { email, senha } = req.body;
 
@@ -61,7 +59,8 @@ async function login(req, res) {
           status: 'failed',
           message: 'Login ou senha incorretos!',
         });
-    };
+      }
+
       let options = {
         maxAge: 5 * 60 * 1000, // minutos * segundos * milissegundos = total 20 minutos
         httpOnly: true, // restringe acesso de js ao cookie
@@ -81,7 +80,83 @@ async function login(req, res) {
             status: "success",
             message: "Autenticação realizada com sucesso!",
         });
-};
+    }
+
+    db.close((err) => {
+      if (err) {
+        console.log(err.message);
+        return console.error(err.message);
+      }
+      console.log('Fechou a conexão com o banco de dados.');
+    });
+
+  });
+}
+
+// esta função é um middleware, uma chamada que vai entre duas chamadas para verificar se o usuário está logado
+async function verificaToken(req, res, next) {  
+  // se o token (variável SessionID) não estiver presente no cookie o usuário não está logado
+  const token = req.cookies.SessionID;
+  if (!token) {
+    return res.status(401).json({ 
+      status: 'failed', 
+      message: 'Você não está logado!'
+    });
+  }
+
+  console.log(`token: ${token}`);
+  console.log(`SECRET_ACCESS_TOKEN: ${SECRET_ACCESS_TOKEN}`);
+  jwt.verify(token, SECRET_ACCESS_TOKEN, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Sessão expirada!',
+      });
+    } else {
+      // o conteúdo decodificado do token é o id do usuário
+      let { idUsuario} = decoded;
+      console.log(`decoded: ${decoded}`);
+      console.log(`idUsuario decoded: ${decoded.idUsuario}`);
+
+      db = databasePath();
+
+      // recupera dados do usuário que está tentando fazer login
+      db.get('SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = ?', [idUsuario], async (error, result) => {
+        if (error) {
+          console.log(error)
+        }
+        else if (result) {
+          const { id_usuario, nome, email } = result
+          req.idUsuario = id_usuario
+          req.email = email
+          req.nome = nome
+
+          db.close((err) => {
+            if (err) {
+              return console.error(err.message)
+            }
+            console.log('Fechou a conexão com o banco de dados.')
+          });
+
+          next();
+        }
+      });
+    }   
+  });
+}
+
+app.post("/login", login);
+
+app.post('/logout', (req, res) => {
+  // Limpa o cookie "SessionID" 
+  res.clearCookie("SessionID");
+
+  // Retorna uma resposta de sucesso
+  res.status(200).json({
+    status: 'success',
+    message: 'Logout realizado com sucesso!'
+  });
+});
 
   
 
@@ -184,6 +259,21 @@ app.post('/usuarios/novo', verificaToken, (req, res) => {
   }
 });
 
+// Endpoint para retornar todos os dados do usuário logado
+app.get('/usuarios/me', verificaToken, (req, res) => {
+  // recupera dados do usuário logado
+  const usuarioLogado = {
+    idUsuario: req.idUsuario,
+    nome: req.nome,
+    email: req.email
+  }
+  // Retorna os dados do usuário em formato JSON
+  res.status(200).json({
+      status: 'success',
+      usuario: usuarioLogado // Retorna todos os dados do usuário
+  });
+});
+
 app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   const { id_usuario } = req.params;
   console.log("chegou aqui: "+id_usuario);
@@ -251,6 +341,7 @@ app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
       });
     });
 });
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
