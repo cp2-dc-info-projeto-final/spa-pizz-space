@@ -32,7 +32,7 @@ aaaaaaaaS <script>
 
   const carregarUsuarios = async () => {
     try {
-      let res = await axios.get(api_base_url + "/usuarios", {
+      let res = await axios.get(api_base_url + "/usuarios ", {
         responseType: "json",
         headers: {
           Accept: "application/json",

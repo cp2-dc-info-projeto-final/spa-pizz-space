@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 
 
 app.use(cors({
-  origin: 'http://localhost:5173/', // Habilita apenas URL do frontend svelte
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Habilita apenas URL do frontend svelte
   credentials: true, 
 }));
 
@@ -42,8 +42,7 @@ function geraAcessoJWT(idUsuario) {
 };
 
 async function login(req, res) {
-  let db = databasePath();
-
+  let db = databasePath;
   const { email, senha } = req.body;
 
   // recupera a senha do usuário que está tentando fazer login
