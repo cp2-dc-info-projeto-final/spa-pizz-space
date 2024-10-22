@@ -95,9 +95,9 @@ async function login(req, res) {
 // esta função é um middleware, uma chamada que vai entre duas chamadas para verificar se o usuário está logado
 async function verificaToken(req, res, next) {  
   // se o token (variável SessionID) não estiver presente no cookie o usuário não está logado
-  if (true) {
+  /*if (true) {
     next();
-  } else {
+  } else {*/
     const token = req.cookies.SessionID;
   if (!token) {
     return res.status(401).json({ 
@@ -145,7 +145,7 @@ async function verificaToken(req, res, next) {
       });
     }   
   });
-  }
+  // }
   
 }
 

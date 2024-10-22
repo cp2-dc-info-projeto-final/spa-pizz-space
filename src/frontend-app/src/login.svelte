@@ -46,7 +46,8 @@
 <main>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <div class="card">
+    <div class="div1">
+      <h2>Login</h2>
       <form on:submit|preventDefault={loginUsuario}>
         <div>
           <label for="email">Email:</label>
