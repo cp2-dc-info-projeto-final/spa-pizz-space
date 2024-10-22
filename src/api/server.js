@@ -42,7 +42,7 @@ function geraAcessoJWT(idUsuario) {
 };
 
 async function login(req, res) {
-  let db = databasePath;
+  let db = connectToDatabase();
   const { email, senha } = req.body;
 
   // recupera a senha do usuário que está tentando fazer login
@@ -120,7 +120,7 @@ async function verificaToken(req, res, next) {
       console.log(`decoded: ${decoded}`);
       console.log(`idUsuario decoded: ${decoded.idUsuario}`);
 
-      db = databasePath();
+      db = connectToDatabase();
 
       // recupera dados do usuário que está tentando fazer login
       db.get('SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = ?', [idUsuario], async (error, result) => {
