@@ -38,6 +38,8 @@
   </script>
   
   <main>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <h2>Cadastrar Serviço</h2>
     {#if error}
       <div class="alert alert-danger">{error}</div>
@@ -48,7 +50,13 @@
     <form on:submit|preventDefault={cadastrarServico}>
       <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
-        <input type="text" id="nome" class="form-control" bind:value={nome} required />
+        <input
+        type="text" 
+        id="nome" 
+        class="form-control" 
+        bind:value={nome} 
+        required
+         />
       </div>
       <div class="mb-3">
         <label for="descricao" class="form-label">Descrição</label>
@@ -56,12 +64,14 @@
       </div>
       <div class="mb-3">
         <label for="preco" class="form-label">Preço</label>
-        <input type="number" id="preco" class="form-control" bind:value={preco} required />
+        <input
+        type="number" 
+        id="preco" 
+        class="form-control" 
+        bind:value={preco} 
+        required
+         />
       </div>
       <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
     </form>
   </main>
-  
-  <style>
-  </style>
-  
