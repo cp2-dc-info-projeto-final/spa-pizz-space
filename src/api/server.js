@@ -346,6 +346,38 @@ app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
     });
 });
 
+// Endpoint para cadastrar um novo serviço
+app.post('/servicos/novo', verificaToken, (req, res) => {
+  const { nome, descricao, preco } = req.body;
+
+  if (!nome || !descricao || !preco) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Por favor, preencha todos os campos!',
+    });
+  }
+
+  let db = connectToDatabase();
+
+  db.run('INSERT INTO servicos(nome, descricao, preco) VALUES (?, ?, ?)', [nome, descricao, preco], function(err) {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao cadastrar o serviço!',
+        error: err.message,
+      });
+    }
+
+    db.close();
+    return res.status(201).json({
+      status: 'success',
+      message: 'Serviço cadastrado com sucesso!',
+      id: this.lastID, // ID do serviço recém-criado
+    });
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

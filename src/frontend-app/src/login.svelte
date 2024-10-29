@@ -26,7 +26,6 @@
               senha
             }
           );
-
           resultado = res.data;
 
           // Redirecionar para uma página protegida após login bem-sucedido
