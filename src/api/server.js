@@ -109,7 +109,6 @@ async function verificaToken(req, res, next) {
 
   console.log(`token: ${token}`);
   console.log(`SECRET_ACCESS_TOKEN: ${SECRET_ACCESS_TOKEN}`);
-  console.log('oi');
   jwt.verify(token, SECRET_ACCESS_TOKEN, (err, decoded) => {
     if (err) {
       return res.status(401).json({
