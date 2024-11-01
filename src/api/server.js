@@ -109,6 +109,7 @@ async function verificaToken(req, res, next) {
 
   console.log(`token: ${token}`);
   console.log(`SECRET_ACCESS_TOKEN: ${SECRET_ACCESS_TOKEN}`);
+  console.log('oi');
   jwt.verify(token, SECRET_ACCESS_TOKEN, (err, decoded) => {
     if (err) {
       return res.status(401).json({
@@ -117,7 +118,7 @@ async function verificaToken(req, res, next) {
       });
     } else {
       // o conteúdo decodificado do token é o id do usuário
-      let { idUsuario} = decoded;
+      let {idUsuario} = decoded;
       console.log(`decoded: ${decoded}`);
       console.log(`idUsuario decoded: ${decoded.idUsuario}`);
 
