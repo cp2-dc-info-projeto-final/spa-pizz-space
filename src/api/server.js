@@ -320,21 +320,138 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   });
 });
 
-app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
+
+
+app.post('/servicos/novo', verificaToken, (req, res) => {
+  const { nome, descricao, valor } = req.body;
+  console.log(req);
+  // Aqui começa a validação dos campos do formulário
+  let erro = "";
+  if (nome.length < 1 || descricao.length < 1 || valor.number) {
+    erro += 'Por favor, preencha todos os campos corretamente!';
+  }
+  if (erro) {
+    res.status(500).json({
+      status: 'failed',
+      message: erro,
+    });
+  }
+  else {
+    // aqui começa o código para inserir o registro no banco de dados
+    let db = new sqlite3.Database(databasePath, (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Conectou no banco de dados!');
+    });
+    db.get('SELECT nome FROM servico WHERE nome = ?', [nome], async (error, result) => {
+      if (error) {
+        console.log(error)
+      }
+      else if (result) {
+        db.close((err) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log('Fechou a conexão com o banco de dados.');
+        });
+        return res.status(500).json({
+          status: 'failed',
+          message: 'Já existe um serviço com este nome!',
+        });
+      } else {
+        let senha_criptografada = await bcrypt.hash(senha, 8)
+        db.run('INSERT INTO servico(nome, descricao,valor) VALUES (?, ?, ?)', [nome,
+          descricao, valor], (error2) => {
+            if (error2) {
+              console.log(error2)
+            } else {
+              db.close((err) => {
+                if (err) {
+                  return console.error(err.message);
+                }
+                console.log('Fechou a conexão com o banco de dados.');
+              });
+              return res.status(200).json({
+                status: 'success',
+                message: 'Registro feito com sucesso!',
+                campos: req.body
+              });
+            }
+          });
+      }
+    });
+  }
+});
+
+// Endpoint para retornar todos os dados do usuário logado
+app.get('/servico/me', verificaToken, (req, res) => {
+  // recupera dados do usuário logado
+  const usuarioLogado = {
+    idUsuario: req.idUsuario,
+    nome: req.nome,
+    email: req.email
+  }
+  // Retorna os dados do usuário em formato JSON
+  res.status(200).json({
+      status: 'success',
+      usuario: usuarioLogado // Retorna todos os dados do usuário
+  });
+});
+
+app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   const { id_usuario } = req.params;
-  const { nome, email, senha, num_cell } = req.body;
+  console.log("chegou aqui: "+id_usuario);
+
+  // Conectar ao banco de dados SQLite
+  let db = new sqlite3.Database(databasePath, (err) => {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao conectar ao banco de dados!',
+        error: err.message
+      });
+    }
+    console.log('Conectou no banco de dados!');
+  });
+
+  // Deletar o usuário pelo ID
+  db.run('DELETE FROM servico WHERE id_servico = ?', [id_servico], function (err) {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao tentar remover o serviço ${id_servico}!',
+        error: err.message
+      });
+    }
+    // Fechar a conexão com o banco de dados
+    db.close((err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Fechou a conexão com o banco de dados.');
+    });
+
+    // Retornar uma resposta de sucesso
+    return res.status(200).json({
+      status: 'success',
+      message: `serviço com id ${id_servico} removido com sucesso!`
+    });
+  });
+});
+
+app.post('/servico/:id_servico', verificaToken, async (req, res) => {
+  const { id_servico } = req.params;
+  const { nome, desscricao, valor} = req.body;
 
   let db = connectToDatabase();
 
-  // Se a senha está sendo atualizada, hash ela
-  let senha_criptografada = senha ? await bcrypt.hash(senha, 8) : undefined;
-
-  db.run('UPDATE usuario SET nome = ?, email = ?, num_cell = ?, senha = ? WHERE id_usuario = ?', 
-    [nome, email, num_cell, senha_criptografada || null, id_usuario], function(err) {
+  db.run('UPDATE servico SET nome = ?, servico = ?, valor = ?, WHERE id_servico = ?', 
+    [nome, descricao, valor || null, id_servico], function(err) {
       if (err) {
         return res.status(500).json({
           status: 'failed',
-          message: `Erro ao tentar atualizar o usuário ${id_usuario}!`,
+          message: `Erro ao tentar atualizar o serviço ${id_servico}!`,
           error: err.message
         });
       }

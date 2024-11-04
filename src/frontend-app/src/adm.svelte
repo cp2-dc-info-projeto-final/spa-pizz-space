@@ -11,10 +11,7 @@ let formData = {
     num_cell: '',
     senha: ''
   };
-let nome = "";
-let email = "";
-let num_cell = "";
-let senha = "";
+  
 const api_base_url = "http://localhost:3000";
 
 
@@ -112,7 +109,6 @@ const deletarUsuario = async (id) => {
     resultado = null;
   }
   };
-
 
   carregarUsuarios();
 </script>

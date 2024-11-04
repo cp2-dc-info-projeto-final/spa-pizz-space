@@ -14,6 +14,7 @@
       alert('Por favor, preencha todos os campos!');
     }
   }
+
 </script>
 
 <h1>Agendamento</h1>
