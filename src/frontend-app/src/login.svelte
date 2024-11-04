@@ -17,28 +17,29 @@
                   Accept: "application/json",
               }
       });
-      
-      const loginUsuario = async () => {
-        try {
-          let res = await axiosInstance.post("/login",
-            {
-              email,
-              senha
-            }
-          );
-          resultado = res.data;
 
-          // Redirecionar para uma página protegida após login bem-sucedido
-          if (resultado && resultado.status === "success") { 
-              window.location.href = "/index.html";  
-          }
-          error = null; // Limpa o erro se a requisição for bem-sucedida
-        } catch (err) {
-          error = err.response?.data?.message || err.message;
-          resultado = null; // Limpa o resultado em caso de erro
-        }
-        
-      };
+
+      const loginUsuario = async () => {
+  try {
+    let res = await axiosInstance.post("/login", {
+      email,
+      senha
+    });
+    resultado = res.data;
+
+    // Redirecionar para uma página protegida após login bem-sucedido
+    //if (resultado && resultado.status === "success") { 
+    //    window.location.href = "/index.html";  
+    //}
+    error = null; // Limpa o erro se a requisição for bem-sucedida
+  } catch (err) {
+    console.error('Erro ao tentar fazer login:', err); // Log de erro
+    error = err.response?.data?.message || err.message;
+    resultado = null; // Limpa o resultado em caso de erro
+  }
+};
+
+
 
 </script>
 
