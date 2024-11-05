@@ -1,5 +1,7 @@
 <script>
 import axios from "axios";
+// Configuração global para enviar cookies com todas as requisições
+axios.defaults.withCredentials = true;
 let error = null;
 let resultado = null;
 let usuarios = null;

@@ -64,7 +64,7 @@ async function login(req, res) {
         maxAge: 5 * 60 * 1000, // minutos * segundos * milissegundos = total 20 minutos
         httpOnly: true, // restringe acesso de js ao cookie
         secure: NODE_ENV === 'production' ? true : false, // secure ativado de acordo com ambiente (desenvolvimento/produção) para uso do https
-        sameSite: "Lax", // habilita compartilhamento de cookie entre páginas
+        sameSite: "Strict", // habilita compartilhamento de cookie entre páginas
       };
 
       console.log(`secure: ${options.secure}`);
