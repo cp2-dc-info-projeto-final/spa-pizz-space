@@ -37,23 +37,24 @@ function geraAcessoJWT(idUsuario) {
     idUsuario: idUsuario
   };
   return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
-    expiresIn: '5m',
+    expiresIn: '20m',
   });
 };
 
 async function login(req, res) {
   let db = connectToDatabase();
   const { email, senha } = req.body;
-
   // recupera a senha do usuário que está tentando fazer login
   db.get('SELECT id_usuario, senha FROM usuario WHERE email = ?', [email], async (error, result) => {
     if (error) {
-      console.log(error)
+      console.log(error);
     }
     else if (result) {
       let idUsuario = result.id_usuario;
+      console.log("idUsuario: "+result.id_usuario);
       let senhaCorreta = await bcrypt.compare(senha, result.senha)
-      if (!senhaCorreta) {
+      if (!senhaCorreta) {        
+        console.log("Senha incorreta!");
         return res.status(401).json({
           status: 'failed',
           message: 'Login ou senha incorretos!',
@@ -61,7 +62,7 @@ async function login(req, res) {
       }
 
       let options = {
-        maxAge: 5 * 60 * 1000, // minutos * segundos * milissegundos = total 20 minutos
+        maxAge: 20 * 60 * 1000, // minutos * segundos * milissegundos = total 20 minutos
         httpOnly: true, // restringe acesso de js ao cookie
         secure: NODE_ENV === 'production' ? true : false, // secure ativado de acordo com ambiente (desenvolvimento/produção) para uso do https
         sameSite: "Strict", // habilita compartilhamento de cookie entre páginas
@@ -276,6 +277,30 @@ app.get('/usuarios/me', verificaToken, (req, res) => {
       status: 'success',
       usuario: usuarioLogado // Retorna todos os dados do usuário
   });
+});
+
+app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
+  const { id_usuario } = req.params;
+  const { nome, email, num_cell, senha } = req.body;
+  console.log('oi');
+  let db = connectToDatabase();
+
+  db.run('UPDATE servico SET nome = ?, email = ?, num_cell = ?, senha = ?, WHERE id_usuario = ?', 
+    [nome, email, num_cell, senha || null, id_usuario], function(err) {
+      if (err) {
+        return res.status(500).json({
+          status: 'failed',
+          message: `Erro ao tentar atualizar o usuário ${id_usuario}!`,
+          error: err.message
+        });
+      }
+
+      db.close();
+      return res.status(200).json({
+        status: 'success',
+        message: `Usuário com id ${id_usuario} atualizado com sucesso!`
+      });
+    });
 });
 
 app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
