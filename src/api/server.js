@@ -345,22 +345,21 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 });
 
 
-
 app.post('/servicos/novo', verificaToken, (req, res) => {
-  const { nome, descricao, valor } = req.body;
-  console.log(req);
-  // Aqui começa a validação dos campos do formulário
-  let erro = "";
-  if (nome.length < 1 || descricao.length < 1 || valor.number) {
-    erro += 'Por favor, preencha todos os campos corretamente!';
-  }
+  const validarCampos = () => {
+    if (!nome || nome.trim().length < 1) return 'Nome é obrigatório.';
+    if (!descricao || descricao.trim().length < 1) return 'Descrição é obrigatória.';
+    if (isNaN(parseFloat(preco)) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
+    return null;
+  };
+
+  const erro = validarCampos();
   if (erro) {
-    res.status(500).json({
+    return res.status(400).json({
       status: 'failed',
       message: erro,
     });
   }
-  else {
     // aqui começa o código para inserir o registro no banco de dados
     let db = new sqlite3.Database(databasePath, (err) => {
       if (err) {
@@ -368,6 +367,23 @@ app.post('/servicos/novo', verificaToken, (req, res) => {
       }
       console.log('Conectou no banco de dados!');
     });
+
+    try {
+      // Verificar se o serviço já existe
+      const servicoExistente = await new Promise((resolve, reject) => {
+        db.get('SELECT nome FROM servico WHERE nome = ?', [nome], (err, row) => {
+          if (err) return reject(err);
+          resolve(row);
+        });
+      });
+  
+      if (servicoExistente) {
+        return res.status(400).json({
+          status: 'failed',
+          message: 'Já existe um serviço com este nome!',
+        });
+      }
+  
     db.get('SELECT nome FROM servico WHERE nome = ?', [nome], async (error, result) => {
       if (error) {
         console.log(error)
@@ -384,9 +400,8 @@ app.post('/servicos/novo', verificaToken, (req, res) => {
           message: 'Já existe um serviço com este nome!',
         });
       } else {
-        let senha_criptografada = await bcrypt.hash(senha, 8)
-        db.run('INSERT INTO servico(nome, descricao,valor) VALUES (?, ?, ?)', [nome,
-          descricao, valor], (error2) => {
+        db.run('INSERT INTO servico(nome, descricao, preco) VALUES (?, ?, ?)', [nome,
+          descricao, preco], (error2) => {
             if (error2) {
               console.log(error2)
             } else {
@@ -466,12 +481,12 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 
 app.post('/servico/:id_servico', verificaToken, async (req, res) => {
   const { id_servico } = req.params;
-  const { nome, desscricao, valor} = req.body;
+  const { nome, descricao, preco} = req.body;
 
   let db = connectToDatabase();
 
-  db.run('UPDATE servico SET nome = ?, servico = ?, valor = ?, WHERE id_servico = ?', 
-    [nome, descricao, valor || null, id_servico], function(err) {
+  db.run('UPDATE servico SET nome = ?, servico = ?, preco = ?, WHERE id_servico = ?', 
+    [nome, descricao, preco || null, id_servico], function(err) {
       if (err) {
         return res.status(500).json({
           status: 'failed',
@@ -487,38 +502,6 @@ app.post('/servico/:id_servico', verificaToken, async (req, res) => {
       });
     });
 });
-
-// Endpoint para cadastrar um novo serviço
-app.post('/servicos/novo', verificaToken, (req, res) => {
-  const { nome, descricao, preco } = req.body;
-
-  if (!nome || !descricao || !preco) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Por favor, preencha todos os campos!',
-    });
-  }
-
-  let db = connectToDatabase();
-
-  db.run('INSERT INTO servicos(nome, descricao, preco) VALUES (?, ?, ?)', [nome, descricao, preco], function(err) {
-    if (err) {
-      return res.status(500).json({
-        status: 'failed',
-        message: 'Erro ao cadastrar o serviço!',
-        error: err.message,
-      });
-    }
-
-    db.close();
-    return res.status(201).json({
-      status: 'success',
-      message: 'Serviço cadastrado com sucesso!',
-      id: this.lastID, // ID do serviço recém-criado
-    });
-  });
-});
-
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
