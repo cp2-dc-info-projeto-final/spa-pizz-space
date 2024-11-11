@@ -282,7 +282,6 @@ app.get('/usuarios/me', verificaToken, (req, res) => {
 app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
   const { id_usuario } = req.params;
   const { nome, email, num_cell, senha } = req.body;
-  console.log('oi');
   let db = connectToDatabase();
 
   db.run('UPDATE servico SET nome = ?, email = ?, num_cell = ?, senha = ?, WHERE id_usuario = ?', 
@@ -296,6 +295,7 @@ app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
       }
 
       db.close();
+
       return res.status(200).json({
         status: 'success',
         message: `Usuário com id ${id_usuario} atualizado com sucesso!`
@@ -346,10 +346,11 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 
 
 app.post('/servicos/novo', verificaToken, async (req, res) => {
+  const { nome, descricao, preco } = req.body;
   const validarCampos = () => {
-    if (!nome || nome.trim().length < 1) return 'Nome é obrigatório.';
-    if (!descricao || descricao.trim().length < 1) return 'Descrição é obrigatória.';
-    if (isNaN(parseFloat(preco)) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
+    if (!nome || nome.length < 1) return 'Nome é obrigatório.';
+    if (!descricao || descricao.length < 1) return 'Descrição é obrigatória.';
+    if (isNaN(preco) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
     return null;
   };
 

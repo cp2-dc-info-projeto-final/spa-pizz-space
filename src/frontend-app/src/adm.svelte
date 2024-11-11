@@ -135,7 +135,7 @@
                 {/each}
                 <td>
                   <button class="btn btn-danger" on:click={() => deletarUsuario(linha_usuario.id_usuario)}>Remover</button>
-                  <button class="btn btn-warning" on:click={() => updateUsuario(linha_usuario.id_usuario)}>
+                  <button class="btn btn-warning" on:click={() => alternar(linha_usuario.id_usuario)}>
                     {editandoId === linha_usuario.id_usuario ? 'Cancelar' : 'Editar'}
                   </button>
                 </td>
