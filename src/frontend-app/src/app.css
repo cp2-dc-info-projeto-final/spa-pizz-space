@@ -70,3 +70,21 @@ body {
   padding: 10px;
   border-radius: 5px;
 }
+
+.status {
+  padding: 10px;
+  font-weight: bold;
+  color: white;
+}
+
+.ativo {
+  background-color: green;
+}
+
+.inativo {
+  background-color: red;
+}
+
+.em-manutencao {
+  background-color: orange;
+}

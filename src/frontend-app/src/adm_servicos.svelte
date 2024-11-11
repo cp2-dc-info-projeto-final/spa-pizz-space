@@ -6,6 +6,7 @@
     let preco = '';
     let error = null;
     let success = null;
+    let status = 'ativo';
   
     const api_base_url = 'http://localhost:3000';
     const axiosInstance = axios.create({
@@ -34,7 +35,15 @@
         success = null; // Limpa a mensagem de sucesso em caso de erro
       }
     };
+
+    const statusServico = {
+    ativo: 'O serviço está funcionando normalmente.',
+    inativo: 'O serviço está fora de operação.',
+    'em-manutencao': 'O serviço está em manutenção. Por favor, aguarde.'
+    };
+
   </script>
+
   
   <main>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -43,6 +52,9 @@
     {#if error}
       <div class="alert alert-danger">{error}</div>
     {/if}
+    <div class="status {status}">
+      Status do Serviço: {statusServico[status]}
+    </div>
     {#if success}
       <div class="alert alert-success">{success}</div>
     {/if}
@@ -72,5 +84,8 @@
          />
       </div>
       <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
+      <button on:click={() => status = 'ativo'}>Ativar</button>
+      <button on:click={() => status = 'inativo'}>Desativar</button>
+      <button on:click={() => status = 'em-manutencao'}>Em Manutenção</button>
     </form>
   </main>
