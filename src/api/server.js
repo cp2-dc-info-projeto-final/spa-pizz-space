@@ -345,7 +345,7 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 });
 
 
-app.post('/servicos/novo', verificaToken, (req, res) => {
+app.post('/servicos/novo', verificaToken, async (req, res) => {
   const validarCampos = () => {
     if (!nome || nome.trim().length < 1) return 'Nome é obrigatório.';
     if (!descricao || descricao.trim().length < 1) return 'Descrição é obrigatória.';
@@ -360,67 +360,67 @@ app.post('/servicos/novo', verificaToken, (req, res) => {
       message: erro,
     });
   }
-    // aqui começa o código para inserir o registro no banco de dados
-    let db = new sqlite3.Database(databasePath, (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log('Conectou no banco de dados!');
-    });
+  // aqui começa o código para inserir o registro no banco de dados
+  let db = new sqlite3.Database(databasePath, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Conectou no banco de dados!');
+  });
 
-    try {
-      // Verificar se o serviço já existe
-      const servicoExistente = await new Promise((resolve, reject) => {
-        db.get('SELECT nome FROM servico WHERE nome = ?', [nome], (err, row) => {
-          if (err) return reject(err);
-          resolve(row);
-        });
-      });
-  
-      if (servicoExistente) {
-        return res.status(400).json({
-          status: 'failed',
-          message: 'Já existe um serviço com este nome!',
-        });
-      }
-  
-    db.get('SELECT nome FROM servico WHERE nome = ?', [nome], async (error, result) => {
-      if (error) {
-        console.log(error)
-      }
-      else if (result) {
-        db.close((err) => {
-          if (err) {
-            return console.error(err.message);
-          }
-          console.log('Fechou a conexão com o banco de dados.');
-        });
-        return res.status(500).json({
-          status: 'failed',
-          message: 'Já existe um serviço com este nome!',
-        });
-      } else {
-        db.run('INSERT INTO servico(nome, descricao, preco) VALUES (?, ?, ?)', [nome,
-          descricao, preco], (error2) => {
-            if (error2) {
-              console.log(error2)
-            } else {
-              db.close((err) => {
-                if (err) {
-                  return console.error(err.message);
-                }
-                console.log('Fechou a conexão com o banco de dados.');
-              });
-              return res.status(200).json({
-                status: 'success',
-                message: 'Registro feito com sucesso!',
-                campos: req.body
-              });
-            }
-          });
-      }
+
+  // Verificar se o serviço já existe
+  const servicoExistente = await new Promise((resolve, reject) => {
+    db.get('SELECT nome FROM servico WHERE nome = ?', [nome], (err, row) => {
+      if (err) return reject(err);
+      resolve(row);
+    });
+  });
+
+  if (servicoExistente) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Já existe um serviço com este nome!',
     });
   }
+
+
+  db.get('SELECT nome FROM servico WHERE nome = ?', [nome], async (error, result) => {
+    if (error) {
+      console.log(error)
+    }
+    else if (result) {
+      db.close((err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+        console.log('Fechou a conexão com o banco de dados.');
+      });
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Já existe um serviço com este nome!',
+      });
+    } else {
+      db.run('INSERT INTO servico(nome, descricao, preco) VALUES (?, ?, ?)', [nome,
+        descricao, preco], (error2) => {
+          if (error2) {
+            console.log(error2)
+          } else {
+            db.close((err) => {
+              if (err) {
+                return console.error(err.message);
+              }
+              console.log('Fechou a conexão com o banco de dados.');
+            });
+            return res.status(200).json({
+              status: 'success',
+              message: 'Registro feito com sucesso!',
+              campos: req.body
+            });
+          }
+        });
+    }
+  });
 });
 
 // Endpoint para retornar todos os dados do usuário logado
