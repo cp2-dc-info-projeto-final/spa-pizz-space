@@ -22,6 +22,15 @@
             </div>
           </nav>
         <div id="app"></div>
-        <script type="module" src="/src/login.js"></script>
+        <script type="module">
+          import './src/app.css'
+          import App from './src/login.svelte'
+
+          const app = new App({
+            target: document.getElementById('app'),
+          })
+
+          export default app
+        </script>
     </body>
 </html>

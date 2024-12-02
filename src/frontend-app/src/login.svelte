@@ -28,9 +28,9 @@
           resultado = res.data;
 
         // Redirecionar para uma página protegida após login bem-sucedido
-        if (resultado && resultado.status === "success") { 
-            window.location.href = "/index.html";  
-        }
+        //if (resultado && resultado.status === "success") { 
+        //    window.location.href = "/index.html";  
+        //}
         error = null; // Limpa o erro se a requisição for bem-sucedida
       } catch (err) {
         console.error('Erro ao tentar fazer login:', err); // Log de erro
