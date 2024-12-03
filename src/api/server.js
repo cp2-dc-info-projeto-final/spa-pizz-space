@@ -281,12 +281,13 @@ app.get('/usuarios/me', verificaToken, (req, res) => {
 
 app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
   const { id_usuario } = req.params;
-  const { nome, email, num_cell, senha } = req.body;
+  const { nome, email, data_nasc, num_cell } = req.body;
   let db = connectToDatabase();
-
-  db.run('UPDATE servico SET nome = ?, email = ?, num_cell = ?, senha = ?, WHERE id_usuario = ?', 
-    [nome, email, num_cell, senha || null, id_usuario], function(err) {
+  console.log(`nome ${nome} email ${email} data_nasc ${data_nasc} num_cell ${num_cell} id_usuario ${id_usuario}`);
+  db.run('UPDATE usuario SET nome = ?, email = ?, data_nasc = ?, num_cell = ? WHERE id_usuario = ?', 
+    [nome, email, data_nasc, num_cell, id_usuario], function(err) {
       if (err) {
+        console.log("Chegou aqui também, senhor");
         return res.status(500).json({
           status: 'failed',
           message: `Erro ao tentar atualizar o usuário ${id_usuario}!`,
@@ -305,7 +306,6 @@ app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
 
 app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   const { id_usuario } = req.params;
-  console.log("chegou aqui: "+id_usuario);
 
   // Conectar ao banco de dados SQLite
   let db = new sqlite3.Database(databasePath, (err) => {

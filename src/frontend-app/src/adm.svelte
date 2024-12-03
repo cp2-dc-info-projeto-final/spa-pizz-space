@@ -12,8 +12,8 @@
   let formData = {
     nome: '',
     email: '',
-    num_cell: '',
-    senha: ''
+    data_nasc: '',
+    num_cell: ''
   };
 
   const api_base_url = "http://localhost:3000";
@@ -69,14 +69,14 @@
     formData = {
       nome: usuarios.find(user => user.id_usuario === id)?.nome || '',
       email: usuarios.find(user => user.id_usuario === id)?.email || '',
-      num_cell: usuarios.find(user => user.id_usuario === id)?.num_cell || '',
-      senha: ''  // Não preenchendo a senha para edição
+      data_nasc: usuarios.find(user => user.id_usuario === id)?.data_nasc || '',
+      num_cell: usuarios.find(user => user.id_usuario === id)?.num_cell || ''
     };
   };
 
   // Função para resetar o formulário
   const resetarFormulario = () => {
-    formData = { nome: '', email: '', num_cell: '', senha: '' };
+    formData = { nome: '', email: '', data_nasc: '', num_cell: '' };
     editandoId = null;
   };
 
@@ -158,13 +158,17 @@
               <input type="email" id="email" class="form-control" bind:value={formData.email} required />
             </div>
             <div class="mb-3">
+              <label for="data_nasc" class="form-label">Data de nascimento</label>
+              <input type="date" id="data_nasc" class="form-control" bind:value={formData.data_nasc} required />
+            </div>
+            <div class="mb-3">
               <label for="num_cell" class="form-label">Número de celular</label>
               <input type="text" id="num_cell" class="form-control" bind:value={formData.num_cell} required />
             </div>
-            <div class="mb-3">
+            <!--<div class="mb-3">
               <label for="senha" class="form-label">Senha</label>
               <input type="password" id="senha" class="form-control" bind:value={formData.senha} />
-            </div>
+            </div>-->
             <button type="submit" class="btn btn-primary">Salvar</button>
           </form>
         </div>

@@ -28,9 +28,9 @@
           resultado = res.data;
 
         // Redirecionar para uma página protegida após login bem-sucedido
-        //if (resultado && resultado.status === "success") { 
-        //    window.location.href = "/index.html";  
-        //}
+        if (resultado && resultado.status === "success") { 
+            window.location.href = "/index.html";  
+        }
         error = null; // Limpa o erro se a requisição for bem-sucedida
       } catch (err) {
         console.error('Erro ao tentar fazer login:', err); // Log de erro
@@ -44,40 +44,40 @@
 </script>
 
 <main>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <div class="div1">
-      <h2>Login</h2>
-      <form on:submit|preventDefault={loginUsuario}>
-        <div>
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            bind:value={email}
-            placeholder="Digite o email"
-            required
-          />
-        </div>
-        <div>
-          <label for="senha">Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            bind:value={senha}
-            placeholder="Digite a senha"
-            required
-          />
-        </div>
-        {#if error}
-              <p style="color: red;">{error}</p>
-          {/if}
-          {#if resultado && resultado.message}
-              <p style="color: green;">{resultado.message}</p>
-          {/if}
-        <div>
-          <button type="submit">Login</button>
-        </div>
-      </form>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <div class="div1">
+    <h2>Login</h2>
+    <form on:submit|preventDefault={loginUsuario}>
+      <div>
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          bind:value={email}
+          placeholder="Digite o email"
+          required
+        />
+      </div>
+      <div>
+        <label for="senha">Senha:</label>
+        <input
+          type="password"
+          id="senha"
+          bind:value={senha}
+          placeholder="Digite a senha"
+          required
+        />
+      </div>
+      {#if error}
+            <p style="color: red;">{error}</p>
+        {/if}
+        {#if resultado && resultado.message}
+            <p style="color: green;">{resultado.message}</p>
+        {/if}
+      <div>
+        <button type="submit">Login</button>
+      </div>
+    </form>
   </div>
 </main>
