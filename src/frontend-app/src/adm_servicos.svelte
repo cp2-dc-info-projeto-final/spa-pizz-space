@@ -1,8 +1,8 @@
 <script>
-   let error = null;
-    let success = null;
-    let precoError = null;
-    let status = 'ativo';
+  let error = null;
+  let success = null;
+  let precoError = null;
+  let status = 'ativo';
   let servico = { nomeS: '', descricao: '', preco: 0.01 };
 
   function validatePreco(event) {
@@ -12,7 +12,7 @@
         } else {
             precoError = null;
         }
-    }
+  }
 
   async function cadastrarServico() {
       try {

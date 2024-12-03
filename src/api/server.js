@@ -199,7 +199,7 @@ app.get('/usuarios', verificaToken, (req, res) => {
   });
 });
 
-app.post('/usuarios/novo', verificaToken, (req, res) => {
+app.post('/usuarios/novo', (req, res) => {
   const { nome, email, senha, conf_senha, data_nasc, num_cell } = req.body;
   console.log(req);
   // Aqui começa a validação dos campos do formulário
@@ -287,7 +287,6 @@ app.post('/usuarios/:id_usuario', verificaToken, async (req, res) => {
   db.run('UPDATE usuario SET nome = ?, email = ?, data_nasc = ?, num_cell = ? WHERE id_usuario = ?', 
     [nome, email, data_nasc, num_cell, id_usuario], function(err) {
       if (err) {
-        console.log("Chegou aqui também, senhor");
         return res.status(500).json({
           status: 'failed',
           message: `Erro ao tentar atualizar o usuário ${id_usuario}!`,

@@ -29,7 +29,7 @@
 
         // Redirecionar para uma página protegida após login bem-sucedido
         if (resultado && resultado.status === "success") { 
-            window.location.href = "/index.html";  
+            window.location.href = "/perfil.html";  
         }
         error = null; // Limpa o erro se a requisição for bem-sucedida
       } catch (err) {
