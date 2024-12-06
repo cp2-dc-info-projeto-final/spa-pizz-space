@@ -7,7 +7,8 @@ body{
 
 .div1{
   padding: 50px;
-  text-align: center;
+  text-align: center!important;
+  margin: auto;
 }
 
 .login-container {
@@ -65,10 +66,11 @@ body {
 }
 
 .form-container {
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .status {
@@ -87,4 +89,14 @@ body {
 
 .em-manutencao {
   background-color: orange;
+}
+
+.form {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

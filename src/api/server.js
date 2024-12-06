@@ -199,9 +199,11 @@ app.get('/usuarios', verificaToken, (req, res) => {
   });
 });
 
+// Endpoint de cadastro de novos usuários
 app.post('/usuarios/novo', (req, res) => {
   const { nome, email, senha, conf_senha, data_nasc, num_cell } = req.body;
   console.log(req);
+
   // Aqui começa a validação dos campos do formulário
   let erro = "";
   if (nome.length < 1 || email.length < 1 || senha.length < 1 || conf_senha.length < 1) {
@@ -211,12 +213,12 @@ app.post('/usuarios/novo', (req, res) => {
     erro += 'As senhas digitadas não são iguais!';
   }
   if (erro) {
-    res.status(500).json({
+    res.status(400).json({
       status: 'failed',
       message: erro,
     });
-  }
-  else {
+    
+  } else {
     // aqui começa o código para inserir o registro no banco de dados
     let db = new sqlite3.Database(databasePath, (err) => {
       if (err) {
@@ -224,27 +226,27 @@ app.post('/usuarios/novo', (req, res) => {
       }
       console.log('Conectou no banco de dados!');
     });
+
     db.get('SELECT email FROM usuario WHERE email = ?', [email], async (error, result) => {
       if (error) {
-        console.log(error)
-      }
-      else if (result) {
+        console.log(error);
+      } else if (result) {
         db.close((err) => {
           if (err) {
             return console.error(err.message);
           }
           console.log('Fechou a conexão com o banco de dados.');
         });
-        return res.status(500).json({
+        return res.status(400).json({
           status: 'failed',
           message: 'Este e-mail já está em uso!',
         });
       } else {
-        let senha_criptografada = await bcrypt.hash(senha, 8)
-        db.run('INSERT INTO usuario(nome, email, senha, data_nasc, num_cell) VALUES (?, ?, ?, ?, ?)', [nome,
-          email, senha_criptografada, data_nasc, num_cell], (error2) => {
+        let senha_criptografada = await bcrypt.hash(senha, 8);
+        db.run('INSERT INTO usuario(nome, email, senha, data_nasc, num_cell) VALUES (?, ?, ?, ?, ?)', 
+          [nome, email, senha_criptografada, data_nasc, num_cell], (error2) => {
             if (error2) {
-              console.log(error2)
+              console.log(error2);
             } else {
               db.close((err) => {
                 if (err) {
@@ -252,10 +254,10 @@ app.post('/usuarios/novo', (req, res) => {
                 }
                 console.log('Fechou a conexão com o banco de dados.');
               });
-              return res.status(200).json({
+              return res.status(201).json({
                 status: 'success',
                 message: 'Registro feito com sucesso!',
-                campos: req.body
+                campos: req.body,
               });
             }
           });
@@ -263,6 +265,7 @@ app.post('/usuarios/novo', (req, res) => {
     });
   }
 });
+
 
 // Endpoint para retornar todos os dados do usuário logado
 app.get('/usuarios/me', verificaToken, (req, res) => {

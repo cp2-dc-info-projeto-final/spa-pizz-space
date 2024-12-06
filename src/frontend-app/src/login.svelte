@@ -47,37 +47,41 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <div class="div1">
-    <h2>Login</h2>
-    <form on:submit|preventDefault={loginUsuario}>
-      <div>
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          bind:value={email}
-          placeholder="Digite o email"
-          required
-        />
-      </div>
-      <div>
-        <label for="senha">Senha:</label>
-        <input
-          type="password"
-          id="senha"
-          bind:value={senha}
-          placeholder="Digite a senha"
-          required
-        />
-      </div>
-      {#if error}
-            <p style="color: red;">{error}</p>
-        {/if}
-        {#if resultado && resultado.message}
-            <p style="color: green;">{resultado.message}</p>
-        {/if}
-      <div>
-        <button type="submit">Login</button>
-      </div>
-    </form>
+    <div class="form-container">
+      <h2>Login</h2>
+      <form class="form" on:submit|preventDefault={loginUsuario}>
+        <div>
+          <label for="email">Email:</label><br>
+          <input
+            class ="form-control"
+            type="email"
+            id="email"
+            bind:value={email}
+            placeholder="Digite o email"
+            required
+          />
+        </div><br>
+        <div>
+          <label for="senha">Senha:</label><br>
+          <input
+            class ="form-control"
+            type="password"
+            id="senha"
+            bind:value={senha}
+            placeholder="Digite a senha"
+            required
+          />
+        </div><br>
+        {#if error}
+              <p style="color: red;">{error}</p>
+          {/if}
+          {#if resultado && resultado.message}
+              <p style="color: green;">{resultado.message}</p>
+          {/if}
+        <div>
+          <button type="submit">Login</button>
+        </div>
+      </form>
+    </div>
   </div>
 </main>
