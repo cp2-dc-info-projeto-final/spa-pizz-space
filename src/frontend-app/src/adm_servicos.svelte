@@ -16,39 +16,25 @@
   }
 
   async function cadastrarServico() {
-    try {
-        const token = localStorage.getItem('token'); // Recupera o token do localStorage
-
-        if (!token) {
-            throw new Error('Usuário não autenticado');
-        }
-
-        const response = await fetch(API_BASE_URL + '/servicos/novo', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Envia o token no cabeçalho Authorization
-            },
-            body: JSON.stringify(servico)
-        });
-
-        if (!response.ok) {
-            throw new Error('Erro ao salvar o serviço');
-        }
-
-        success = 'Serviço cadastrado com sucesso!';
-        error = null;
-
-        // Resetar o formulário
-        servico = { nomeS: '', descricao: '', preco: 0.01 };
-        status = 'ativo';
-
-    } catch (err) {
-        error = err.message;
-        success = null;
-    }
-}
-
+      try {
+          const response = await fetch( API_BASE_URL + '/servicos/novo', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(servico)
+          });
+          if (!response.ok) {
+              throw new Error('Erro ao salvar o serviço');
+          }
+          success = 'Serviço cadastrado com sucesso!';
+            error = null;
+            // Resetar o formulário
+            servico = { nomeS: '', descricao: '', preco: 0.01 };
+            status = 'ativo';
+        } catch (err) {
+            error = err.message;
+            success = null;
+      }
+  }
 </script>
 
 <main>

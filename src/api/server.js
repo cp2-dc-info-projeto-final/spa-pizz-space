@@ -347,11 +347,11 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 });
 
 
-app.post('/servicos/novo', verificaToken, async (req, res) => {
-  const { nome, descricao, preco } = req.body;
+app.post('/servicos/novo', async (req, res) => {
+  const { nomeS, descricao, preco } = req.body;
 
   const validarCampos = () => {
-    if (!nome || nome.length < 1) return 'Nome é obrigatório.';
+    if (!nomeS || nomeS.length < 1) return 'Nome é obrigatório.';
     if (!descricao || descricao.length < 1) return 'Descrição é obrigatória.';
     if (isNaN(preco) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
     return null;
@@ -369,7 +369,7 @@ app.post('/servicos/novo', verificaToken, async (req, res) => {
   let db = connectToDatabase();
 
   // Verificar se o serviço já existe
-  db.get('SELECT nome FROM servicos WHERE nome = ?', [nome], (err, row) => {
+  db.get('SELECT nomeS FROM servicos WHERE nomeS = ?', [nomeS], (err, row) => {
     if (err) {
       db.close();
       return res.status(500).json({
@@ -387,7 +387,7 @@ app.post('/servicos/novo', verificaToken, async (req, res) => {
       });
     } else {
       // Inserir novo serviço
-      db.run('INSERT INTO servicos(nome, descricao, preco) VALUES (?, ?, ?)', [nome, descricao, preco], (error) => {
+      db.run('INSERT INTO servicos(nomeS, descricao, preco) VALUES (?, ?, ?)', [nomeS, descricao, preco], (error) => {
         if (error) {
           db.close();
           return res.status(500).json({
@@ -434,13 +434,13 @@ app.delete('/servicos/:id_servicos', verificaToken, (req, res) => {
 // Endpoint para atualizar serviço
 app.post('/servicos/:id_servicos', verificaToken, async (req, res) => {
   const { id_servicos } = req.params;
-  const { nome, descricao, preco } = req.body;
+  const { nomeS, descricao, preco } = req.body;
 
   let db = connectToDatabase();
 
   // Atualizar o serviço
-  db.run('UPDATE servicos SET nome = ?, descricao = ?, preco = ? WHERE id_servicos = ?', 
-    [nome, descricao, preco || null, id_servicos], function (err) {
+  db.run('UPDATE servicos SET nomeS = ?, descricao = ?, preco = ? WHERE id_servicos = ?', 
+    [nomeS, descricao, preco || null, id_servicos], function (err) {
       if (err) {
         db.close();
         return res.status(500).json({
