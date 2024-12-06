@@ -4,6 +4,7 @@
   let precoError = null;
   let status = 'ativo';
   let servico = { nomeS: '', descricao: '', preco: 0.01 };
+  const API_BASE_URL = 'http://localhost:3000'
 
   function validatePreco(event) {
         const value = event.target.value;
@@ -15,25 +16,39 @@
   }
 
   async function cadastrarServico() {
-      try {
-          const response = await fetch('http://localhost:3000/services', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(servico)
-          });
-          if (!response.ok) {
-              throw new Error('Erro ao salvar o serviço');
-          }
-          success = 'Serviço cadastrado com sucesso!';
-            error = null;
-            // Resetar o formulário
-            servico = { nomeS: '', descricao: '', preco: 0.01 };
-            status = 'ativo';
-        } catch (err) {
-            error = err.message;
-            success = null;
-      }
-  }
+    try {
+        const token = localStorage.getItem('token'); // Recupera o token do localStorage
+
+        if (!token) {
+            throw new Error('Usuário não autenticado');
+        }
+
+        const response = await fetch(API_BASE_URL + '/servicos/novo', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Envia o token no cabeçalho Authorization
+            },
+            body: JSON.stringify(servico)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao salvar o serviço');
+        }
+
+        success = 'Serviço cadastrado com sucesso!';
+        error = null;
+
+        // Resetar o formulário
+        servico = { nomeS: '', descricao: '', preco: 0.01 };
+        status = 'ativo';
+
+    } catch (err) {
+        error = err.message;
+        success = null;
+    }
+}
+
 </script>
 
 <main>

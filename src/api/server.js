@@ -349,13 +349,14 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
 
 app.post('/servicos/novo', verificaToken, async (req, res) => {
   const { nome, descricao, preco } = req.body;
+
   const validarCampos = () => {
     if (!nome || nome.length < 1) return 'Nome é obrigatório.';
     if (!descricao || descricao.length < 1) return 'Descrição é obrigatória.';
     if (isNaN(preco) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
     return null;
   };
-
+  console.log('oi')
   const erro = validarCampos();
   if (erro) {
     return res.status(400).json({
@@ -363,149 +364,101 @@ app.post('/servicos/novo', verificaToken, async (req, res) => {
       message: erro,
     });
   }
-  // aqui começa o código para inserir o registro no banco de dados
-  let db = new sqlite3.Database(databasePath, (err) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log('Conectou no banco de dados!');
-  });
 
+  // Conectar ao banco de dados
+  let db = connectToDatabase();
 
   // Verificar se o serviço já existe
-  const servicoExistente = await new Promise((resolve, reject) => {
-    db.get('SELECT nome FROM servico WHERE nome = ?', [nome], (err, row) => {
-      if (err) return reject(err);
-      resolve(row);
-    });
-  });
-
-  if (servicoExistente) {
-    return res.status(400).json({
-      status: 'failed',
-      message: 'Já existe um serviço com este nome!',
-    });
-  }
-
-
-  db.get('SELECT nome FROM servico WHERE nome = ?', [nome], async (error, result) => {
-    if (error) {
-      console.log(error)
-    }
-    else if (result) {
-      db.close((err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log('Fechou a conexão com o banco de dados.');
-      });
+  db.get('SELECT nome FROM servicos WHERE nome = ?', [nome], (err, row) => {
+    if (err) {
+      db.close();
       return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao verificar o serviço!',
+        error: err.message,
+      });
+    }
+    
+    if (row) {
+      db.close();
+      return res.status(400).json({
         status: 'failed',
         message: 'Já existe um serviço com este nome!',
       });
     } else {
-      db.run('INSERT INTO servico(nome, descricao, preco) VALUES (?, ?, ?)', [nome,
-        descricao, preco], (error2) => {
-          if (error2) {
-            console.log(error2)
-          } else {
-            db.close((err) => {
-              if (err) {
-                return console.error(err.message);
-              }
-              console.log('Fechou a conexão com o banco de dados.');
-            });
-            return res.status(200).json({
-              status: 'success',
-              message: 'Registro feito com sucesso!',
-              campos: req.body
-            });
-          }
+      // Inserir novo serviço
+      db.run('INSERT INTO servicos(nome, descricao, preco) VALUES (?, ?, ?)', [nome, descricao, preco], (error) => {
+        if (error) {
+          db.close();
+          return res.status(500).json({
+            status: 'failed',
+            message: 'Erro ao adicionar serviço!',
+            error: error.message,
+          });
+        }
+        db.close();
+        return res.status(200).json({
+          status: 'success',
+          message: 'Registro feito com sucesso!',
+          campos: req.body,
         });
-    }
-  });
-});
-
-// Endpoint para retornar todos os dados do usuário logado
-app.get('/servico/me', verificaToken, (req, res) => {
-  // recupera dados do usuário logado
-  const usuarioLogado = {
-    idUsuario: req.idUsuario,
-    nome: req.nome,
-    email: req.email
-  }
-  // Retorna os dados do usuário em formato JSON
-  res.status(200).json({
-      status: 'success',
-      usuario: usuarioLogado // Retorna todos os dados do usuário
-  });
-});
-
-app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
-  const { id_usuario } = req.params;
-  console.log("chegou aqui: "+id_usuario);
-
-  // Conectar ao banco de dados SQLite
-  let db = new sqlite3.Database(databasePath, (err) => {
-    if (err) {
-      return res.status(500).json({
-        status: 'failed',
-        message: 'Erro ao conectar ao banco de dados!',
-        error: err.message
       });
     }
-    console.log('Conectou no banco de dados!');
-  });
-
-  // Deletar o usuário pelo ID
-  db.run('DELETE FROM servico WHERE id_servico = ?', [id_servico], function (err) {
-    if (err) {
-      return res.status(500).json({
-        status: 'failed',
-        message: 'Erro ao tentar remover o serviço ${id_servico}!',
-        error: err.message
-      });
-    }
-    // Fechar a conexão com o banco de dados
-    db.close((err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log('Fechou a conexão com o banco de dados.');
-    });
-
-    // Retornar uma resposta de sucesso
-    return res.status(200).json({
-      status: 'success',
-      message: `serviço com id ${id_servico} removido com sucesso!`
-    });
   });
 });
 
-app.post('/servico/:id_servico', verificaToken, async (req, res) => {
-  const { id_servico } = req.params;
-  const { nome, descricao, preco} = req.body;
+// Endpoint para deletar serviço pelo ID
+app.delete('/servicos/:id_servicos', verificaToken, (req, res) => {
+  const { id_servicos } = req.params;
 
   let db = connectToDatabase();
 
-  db.run('UPDATE servico SET nome = ?, servico = ?, preco = ?, WHERE id_servico = ?', 
-    [nome, descricao, preco || null, id_servico], function(err) {
+  // Deletar o serviço
+  db.run('DELETE FROM servicos WHERE id_servicos = ?', [id_servicos], function (err) {
+    if (err) {
+      db.close();
+      return res.status(500).json({
+        status: 'failed',
+        message: `Erro ao tentar remover o serviço ${id_servicos}!`,
+        error: err.message,
+      });
+    }
+    db.close();
+    return res.status(200).json({
+      status: 'success',
+      message: `Serviço com id ${id_servicos} removido com sucesso!`
+    });
+  });
+});
+
+// Endpoint para atualizar serviço
+app.post('/servicos/:id_servicos', verificaToken, async (req, res) => {
+  const { id_servicos } = req.params;
+  const { nome, descricao, preco } = req.body;
+
+  let db = connectToDatabase();
+
+  // Atualizar o serviço
+  db.run('UPDATE servicos SET nome = ?, descricao = ?, preco = ? WHERE id_servicos = ?', 
+    [nome, descricao, preco || null, id_servicos], function (err) {
       if (err) {
+        db.close();
         return res.status(500).json({
           status: 'failed',
-          message: `Erro ao tentar atualizar o serviço ${id_servico}!`,
-          error: err.message
+          message: `Erro ao tentar atualizar o serviço ${id_servicos}!`,
+          error: err.message,
         });
       }
 
       db.close();
       return res.status(200).json({
         status: 'success',
-        message: `Usuário com id ${id_usuario} atualizado com sucesso!`
+        message: `Serviço com id ${id_servicos} atualizado com sucesso!`
       });
     });
 });
 
+// Iniciar o servidor
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
