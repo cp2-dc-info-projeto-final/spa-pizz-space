@@ -148,20 +148,20 @@
       {#if editandoId !== null}
         <div class="form-container">
           <h3>Editar Usuário</h3>
-          <form on:submit|preventDefault={enviar}>
-            <div class="mb-3">
+          <form class="border p-5" on:submit|preventDefault={enviar}>
+            <div class="mb-5">
               <label for="nome" class="form-label">Nome</label>
               <input type="text" id="nome" class="form-control" bind:value={formData.nome} required />
             </div>
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="email" class="form-label">Email</label>
               <input type="email" id="email" class="form-control" bind:value={formData.email} required />
             </div>
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="data_nasc" class="form-label">Data de nascimento</label>
               <input type="date" id="data_nasc" class="form-control" bind:value={formData.data_nasc} required />
             </div>
-            <div class="mb-3">
+            <div class="mb-5">
               <label for="num_cell" class="form-label">Número de celular</label>
               <input type="text" id="num_cell" class="form-control" bind:value={formData.num_cell} required />
             </div>
