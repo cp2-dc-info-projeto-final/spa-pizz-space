@@ -1,62 +1,96 @@
 <script>
   import axios from "axios";
 
-  let nome = '';
+  let idServico = '';
   let data = '';
   let horario = '';
+  let servicos = [];
   let agendamentos = [];
-  let error = null;
-  let resultado = null;
-  let servicos = null;
-  let colunas_servicos = null;
+
   const api_base_url = "http://localhost:3000";
 
-    // Função para carregar os dados dos usuários
+  // Carregar lista de serviços
   const carregarServicos = async () => {
     try {
-      let res = await axios.get(api_base_url + "/servicos", {
-        responseType: "json",
-        headers: {
-          Accept: "application/json",
-        },
-      });
+      const res = await axios.get(api_base_url + "/servicos");
       servicos = res.data.servicos;
-      colunas_servicos = Object.keys(servicos[0]);
-      error = null;
     } catch (err) {
-      error = "Erro ao buscar dados: " + (err.response?.data?.message || err.message);
-      console.error(err);
-      servicos = null;
+      console.error("Erro ao carregar serviços:", err.message);
     }
   };
 
-    function agendar() {
-    if (nome && data && horario) {
-      agendamentos = [...agendamentos, { nome, data, horario }];
-      nome = '';
-      data = '';
-      horario = '';
-    } else {
-      alert('Por favor, preencha todos os campos!');
+  // Função para carregar agendamentos
+  const carregarAgendamentos = async () => {
+    try {
+      const res = await axios.get(api_base_url + "/agendamentos");
+      agendamentos = res.data.agendamentos || [];
+      console.log("Agendamentos carregados:", agendamentos);
+    } catch (err) {
+      console.error("Erro ao carregar agendamentos:", err.message);
     }
-  }
+  };
 
+  // Agendar serviço
+  const agendarServico = async () => {
+    if (!idServico || !data || !horario) {
+      alert("Preencha todos os campos antes de agendar!");
+      return;
+    }
+
+    try {
+      const res = await axios.post(api_base_url + "/agendamentos", {
+        idServico,
+        data,
+        horario,
+      });
+      alert("Serviço agendado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao agendar serviço:", err.message);
+      alert("Erro ao agendar o serviço. Tente novamente.");
+    }
+  };
+
+  // Carregar serviços ao montar o componente
   carregarServicos();
+  // Carregar os agendamentos ao montar o componente
+  carregarAgendamentos();
 </script>
+
 
 <main>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <h1>Agendamento</h1>
-  <input type="text" bind:value={nome} placeholder="Nome" />
-  <input type="date" bind:value={data} />
-  <input type="time" bind:value={horario} />
-  <button on:click={agendar}>Agendar</button>
+  <h1>Agendamento de Serviço</h1>
+  
+  <!-- Formulário de Agendamento -->
+  <form on:submit|preventDefault={agendarServico}>
+      <label for="servico">Serviço:</label>
+      <select id="servico" bind:value={idServico}>
+          <option disabled selected>Selecione um serviço</option>
+          {#each servicos as servico}
+              <option value={servico.id_servicos}>{servico.nomeS}</option>
+          {/each}
+      </select>
 
-  <h2>Agendamentos</h2>
-  <ul>
-    {#each agendamentos as agendamento}
-      <li>{agendamento.nome} - {agendamento.data} {agendamento.horario}</li>
-    {/each}
-  </ul>
+      <label for="data">Data:</label>
+      <input type="date" id="data" bind:value={data} />
+
+      <label for="horario">Horário:</label>
+      <input type="time" id="horario" bind:value={horario} />
+
+      <button type="submit">Agendar</button>
+  </form>
+
+
+  <h2>Seus Agendamentos</h2>
+  {#if agendamentos.length > 0}
+    <ul>
+      {#each agendamentos as agendamento}
+        <li>{agendamento.servico} - {agendamento.data} {agendamento.horario}</li>
+      {/each}
+    </ul>
+  {:else}
+    <p>Você não tem agendamentos no momento.</p>
+  {/if}
+
 </main>

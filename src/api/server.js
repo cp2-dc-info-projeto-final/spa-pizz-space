@@ -458,6 +458,79 @@ app.post('/servicos/:id_servicos', verificaToken, async (req, res) => {
     });
 });
 
+app.post('/agendamentos', verificaToken, (req, res) => {
+  const { id_servico, data, horario } = req.body;
+  const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
+
+  if (!id_servico || !data || !horario) {
+      return res.status(400).json({
+          status: 'failed',
+          message: 'Preencha todos os campos obrigatórios!',
+      });
+  }
+
+  let db = connectToDatabase();
+
+  db.run(
+      'INSERT INTO agendamentos (id_usuario, id_servico, data, horario) VALUES (?, ?, ?, ?)',
+      [id_usuario, id_servico, data, horario],
+      function (err) {
+          if (err) {
+              db.close();
+              return res.status(500).json({
+                  status: 'failed',
+                  message: 'Erro ao criar o agendamento!',
+                  error: err.message,
+              });
+          }
+
+          db.close();
+          res.status(201).json({
+              status: 'success',
+              message: 'Agendamento criado com sucesso!',
+              agendamento: {
+                  id_agendamento: this.lastID,
+                  id_usuario,
+                  id_servico,
+                  data,
+                  horario,
+              },
+          });
+      }
+  );
+});
+
+app.get('/agendamentos', verificaToken, (req, res) => {
+  const id_usuario = req.idUsuario;
+
+  let db = connectToDatabase();
+
+  db.all(
+      `SELECT a.id_agendamento, a.data, a.horario, s.nomeS AS servico
+       FROM agendamentos a
+       JOIN servicos s ON a.id_servico = s.id_servicos
+       WHERE a.id_usuario = ?`,
+      [id_usuario],
+      (err, rows) => {
+          if (err) {
+              db.close();
+              return res.status(500).json({
+                  status: 'failed',
+                  message: 'Erro ao buscar agendamentos!',
+                  error: err.message,
+              });
+          }
+
+          db.close();
+          res.status(200).json({
+              status: 'success',
+              agendamentos: rows,
+          });
+      }
+  );
+});
+
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
