@@ -1,6 +1,6 @@
 <script>
   import axios from "axios";
-  let nomeS = "";
+  let nomeS = '';
   let descricao = '';
   let preco = '';
   let error = null;
