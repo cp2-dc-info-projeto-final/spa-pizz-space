@@ -49,7 +49,7 @@
 
   const carregarServicos = async () => {
     try {
-      let res = await axiosInstance.get(api_base_url + "/servicos", {
+      let res = await axios.get(api_base_url + "/servicos", {
         responseType: "json",
         headers: {
           Accept: "application/json",
