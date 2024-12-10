@@ -6,7 +6,7 @@
   let horario = '';
   let servicos = [];
   let agendamentos = [];
-
+  let loading = false; // Variável para controlar o estado de carregamento
   const api_base_url = "http://localhost:3000";
 
   // Carregar lista de serviços
@@ -37,9 +37,10 @@
       return;
     }
 
+    loading = true;
     try {
       const res = await axios.post(api_base_url + "/agendamentos", {
-        idServico,
+        id: idServico,
         data,
         horario,
       });
@@ -47,6 +48,8 @@
     } catch (err) {
       console.error("Erro ao agendar serviço:", err.message);
       alert("Erro ao agendar o serviço. Tente novamente.");
+    } finally {
+      loading = false;
     }
   };
 
@@ -60,10 +63,9 @@
 <main>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <h1>Agendamento de Serviço</h1>
-  
-  <!-- Formulário de Agendamento -->
-  <form on:submit|preventDefault={agendarServico}>
+  <div class="div1">
+    <h1>Agendamento de Serviço</h1>
+    <form on:submit|preventDefault={agendarServico}>
       <label for="servico">Serviço:</label>
       <select id="servico" bind:value={idServico}>
           <option disabled selected>Selecione um serviço</option>
@@ -78,19 +80,23 @@
       <label for="horario">Horário:</label>
       <input type="time" id="horario" bind:value={horario} />
 
-      <button type="submit">Agendar</button>
-  </form>
+      <button type="submit" disabled={loading}>Agendar</button>
+    </form>
+    {#if loading}
+      <p>Carregando...</p>
+    {/if}
+  </div>
 
-
-  <h2>Seus Agendamentos</h2>
-  {#if agendamentos.length > 0}
-    <ul>
-      {#each agendamentos as agendamento}
-        <li>{agendamento.servico} - {agendamento.data} {agendamento.horario}</li>
-      {/each}
-    </ul>
-  {:else}
-    <p>Você não tem agendamentos no momento.</p>
-  {/if}
-
+  <div class="div1">
+    <h2>Seus Agendamentos</h2>
+    {#if agendamentos.length > 0}
+      <ul>
+        {#each agendamentos as agendamento}
+          <li>{agendamento.servico} - {agendamento.data} {agendamento.horario}</li>
+        {/each}
+      </ul>
+    {:else}
+      <p>Você não tem agendamentos no momento.</p>
+    {/if}
+  </div>
 </main>

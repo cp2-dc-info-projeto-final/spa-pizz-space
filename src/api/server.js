@@ -346,7 +346,7 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   });
 });
 
-app.get('/servicos', verificaToken, (req, res) => {
+app.get('/servicos', (req, res) => {
   let db = new sqlite3.Database(databasePath, (err) => {
     if (err) {
       return console.error(err.message);

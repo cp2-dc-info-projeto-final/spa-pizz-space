@@ -75,20 +75,22 @@
 <main>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <div class="login-container">
-    {#if error}
-        <p style="color: red;">{error}</p>
-    {:else if usuarioLogado}
-        <h2>Dados do Usuário Logado</h2>
-        
-        <p><strong>ID:</strong> {usuarioLogado.idUsuario}</p>
-        <p><strong>Nome:</strong> {usuarioLogado.nome}</p>
-        <p><strong>E-mail:</strong> {usuarioLogado.email}</p>
+    <div class="form-container">
+      <div class="form">
+        {#if error}
+            <p style="color: red;">{error}</p>
+        {:else if usuarioLogado}
+            <h2>Dados do Usuário Logado</h2>
+            
+            <p><strong>ID:</strong> {usuarioLogado.idUsuario}</p>
+            <p><strong>Nome:</strong> {usuarioLogado.nome}</p>
+            <p><strong>E-mail:</strong> {usuarioLogado.email}</p>
 
-        <button on:click={logout}>Logout</button>
-        
-    {:else}
-        <p>Carregando dados do usuário...</p>
-    {/if}
+            <button on:click={logout}>Logout</button>
+            
+        {:else}
+            <p>Carregando dados do usuário...</p>
+        {/if}
+      </div>
     </div>
 </main>
