@@ -47,7 +47,7 @@
     }
   };
 
-  const carregarServicos = async () => {
+  const carregarServicos = async () => {  
     try {
       let res = await axios.get(api_base_url + "/servicos", {
         responseType: "json",
@@ -55,6 +55,7 @@
           Accept: "application/json",
         },
       });
+      
       servicos = res.data.servicos;
       error = null; // Limpa o erro se a requisição for bem-sucedida
     } catch (err) {
@@ -129,9 +130,9 @@
     }
     editandoId = id;
     formDataServico = {
-      nomeS: servicos.find(user => user.id_servicos === id)?.nomeS || '',
-      descricao: servicos.find(user => user.id_servicos === id)?.descricao || '',
-      preco: servicos.find(user => user.id_servicos === id)?.preco || ''
+      nomeS: servicos.find(user => user.id === id)?.nomeS || '',
+      descricao: servicos.find(user => user.id === id)?.descricao || '',
+      preco: servicos.find(user => user.id === id)?.preco || ''
     
     };
   };
@@ -290,9 +291,9 @@
                   <td>{linha_servico[atributo]}</td>
                 {/each}
                 <td>
-                  <button class="btn btn-danger" on:click={() => deletarServico(linha_servico.id_servicos)}>Remover</button>
-                  <button class="btn btn-warning" on:click={() => alternarServico(linha_servico.id_servicos)}>
-                    {editandoId === linha_servico.id_servicos ? 'Cancelar' : 'Editar'}
+                  <button class="btn btn-danger" on:click={() => deletarServico(linha_servico.id)}>Remover</button>
+                  <button class="btn btn-warning" on:click={() => alternarServico(linha_servico.id)}>
+                    {editandoId === linha_servico.id ? 'Cancelar' : 'Editar'}
                   </button>
                 </td>
               </tr>

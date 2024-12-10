@@ -346,8 +346,41 @@ app.delete('/usuarios/:id_usuario', verificaToken, (req, res) => {
   });
 });
 
+app.get('/servicos', verificaToken, (req, res) => {
+  let db = new sqlite3.Database(databasePath, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Conectou no banco de dados!');
+  });
 
-app.post('/servicos/novo', async (req, res) => {
+  // Seleciona todos os usuários da tabela 'usuario'
+  db.all('SELECT * FROM servicos', [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Erro ao consultar o banco de dados!',
+        error: err.message
+      });
+    }
+
+    // Fecha a conexão com o banco de dados
+    db.close((err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Fechou a conexão com o banco de dados.');
+    });
+    
+    // Retorna os dados dos usuários em formato JSON
+    res.status(200).json({
+      status: 'success',
+      servicos: rows
+    });
+  });
+});
+
+app.post('/servicos', async (req, res) => {
   const { nomeS, descricao, preco } = req.body;
 
   const validarCampos = () => {
@@ -408,44 +441,44 @@ app.post('/servicos/novo', async (req, res) => {
 });
 
 // Endpoint para deletar serviço pelo ID
-app.delete('/servicos/:id_servicos', verificaToken, (req, res) => {
-  const { id_servicos } = req.params;
+app.delete('/servicos/:id', verificaToken, (req, res) => {
+  const { id } = req.params;
 
   let db = connectToDatabase();
 
   // Deletar o serviço
-  db.run('DELETE FROM servicos WHERE id_servicos = ?', [id_servicos], function (err) {
+  db.run('DELETE FROM servicos WHERE id = ?', [id], function (err) {
     if (err) {
       db.close();
       return res.status(500).json({
         status: 'failed',
-        message: `Erro ao tentar remover o serviço ${id_servicos}!`,
+        message: `Erro ao tentar remover o serviço ${id}!`,
         error: err.message,
       });
     }
     db.close();
     return res.status(200).json({
       status: 'success',
-      message: `Serviço com id ${id_servicos} removido com sucesso!`
+      message: `Serviço com id ${id} removido com sucesso!`
     });
   });
 });
 
 // Endpoint para atualizar serviço
-app.post('/servicos/:id_servicos', verificaToken, async (req, res) => {
-  const { id_servicos } = req.params;
+app.post('/servicos/:id', verificaToken, async (req, res) => {
+  const { id } = req.params;
   const { nomeS, descricao, preco } = req.body;
 
   let db = connectToDatabase();
 
   // Atualizar o serviço
-  db.run('UPDATE servicos SET nomeS = ?, descricao = ?, preco = ? WHERE id_servicos = ?', 
-    [nomeS, descricao, preco || null, id_servicos], function (err) {
+  db.run('UPDATE servicos SET nomeS = ?, descricao = ?, preco = ? WHERE id = ?', 
+    [nomeS, descricao, preco || null, id], function (err) {
       if (err) {
         db.close();
         return res.status(500).json({
           status: 'failed',
-          message: `Erro ao tentar atualizar o serviço ${id_servicos}!`,
+          message: `Erro ao tentar atualizar o serviço ${id}!`,
           error: err.message,
         });
       }
@@ -453,16 +486,16 @@ app.post('/servicos/:id_servicos', verificaToken, async (req, res) => {
       db.close();
       return res.status(200).json({
         status: 'success',
-        message: `Serviço com id ${id_servicos} atualizado com sucesso!`
+        message: `Serviço com id ${id} atualizado com sucesso!`
       });
     });
 });
 
 app.post('/agendamentos', verificaToken, (req, res) => {
-  const { id_servico, data, horario } = req.body;
+  const { id, data, horario } = req.body;
   const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
 
-  if (!id_servico || !data || !horario) {
+  if (!id|| !data || !horario) {
       return res.status(400).json({
           status: 'failed',
           message: 'Preencha todos os campos obrigatórios!',
@@ -472,8 +505,8 @@ app.post('/agendamentos', verificaToken, (req, res) => {
   let db = connectToDatabase();
 
   db.run(
-      'INSERT INTO agendamentos (id_usuario, id_servico, data, horario) VALUES (?, ?, ?, ?)',
-      [id_usuario, id_servico, data, horario],
+      'INSERT INTO agendamentos (id_usuario, id, data, horario) VALUES (?, ?, ?, ?)',
+      [id_usuario, id, data, horario],
       function (err) {
           if (err) {
               db.close();
@@ -491,7 +524,7 @@ app.post('/agendamentos', verificaToken, (req, res) => {
               agendamento: {
                   id_agendamento: this.lastID,
                   id_usuario,
-                  id_servico,
+                  id,
                   data,
                   horario,
               },
@@ -508,7 +541,7 @@ app.get('/agendamentos', verificaToken, (req, res) => {
   db.all(
       `SELECT a.id_agendamento, a.data, a.horario, s.nomeS AS servico
        FROM agendamentos a
-       JOIN servicos s ON a.id_servico = s.id_servicos
+       JOIN servicos s ON a.id = s.id
        WHERE a.id_usuario = ?`,
       [id_usuario],
       (err, rows) => {
