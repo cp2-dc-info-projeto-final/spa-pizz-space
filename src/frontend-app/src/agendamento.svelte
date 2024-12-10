@@ -1,5 +1,6 @@
 <script>
   import axios from "axios";
+  import Nav from "./componentes/Nav.svelte";
 
   let idServico = '';
   let data = '';
@@ -59,6 +60,7 @@
   carregarAgendamentos();
 </script>
 
+<Nav/>
 
 <main>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
