@@ -42,8 +42,8 @@
     try {
       const res = await axios.post(api_base_url + "/agendamentos", {
         id: idServico,
-        data,
-        horario,
+        data: data,
+        horario: horario,
       });
       alert("Serviço agendado com sucesso!");
     } catch (err) {
@@ -72,7 +72,7 @@
       <select id="servico" bind:value={idServico}>
           <option disabled selected>Selecione um serviço</option>
           {#each servicos as servico}
-              <option value={servico.id_servicos}>{servico.nomeS}</option>
+              <option value={servico.id}>{servico.nomeS}</option>
           {/each}
       </select>
 

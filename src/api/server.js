@@ -99,8 +99,11 @@ async function verificaToken(req, res, next) {
   /*if (true) {
     next();
   } else {*/
+    console.log("Verifica token");
     const token = req.cookies.SessionID;
+    console.log("Verifica token: "+ token);
   if (!token) {
+    console.log("Erro no token");
     return res.status(401).json({ 
       status: 'failed', 
       message: 'Você não está logado!'
@@ -491,9 +494,11 @@ app.post('/servicos/:id', verificaToken, async (req, res) => {
     });
 });
 
-app.post('/agendamentos', verificaToken, (req, res) => {
+app.post('/agendamentos', (req, res) => {
+  console.log("Entrou em agendamentos");
   const { id, data, horario } = req.body;
   const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
+  console.log(id + " " + data + " " + horario);
 
   if (!id|| !data || !horario) {
       return res.status(400).json({
@@ -542,7 +547,7 @@ app.get('/agendamentos', verificaToken, (req, res) => {
       `SELECT a.id_agendamento, a.data, a.horario, s.nomeS AS servico
        FROM agendamentos a
        JOIN servicos s ON a.id = s.id
-       WHERE a.id_usuario = ?`,
+       WHERE a.id_usuario = ?`, //talvez o erro esteja aqui!
       [id_usuario],
       (err, rows) => {
           if (err) {
@@ -568,3 +573,5 @@ app.get('/agendamentos', verificaToken, (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+
