@@ -24,21 +24,16 @@
                 <a class="nav-item nav-link" href="index.html">Cadastro</a>
                 <a class="nav-item nav-link" href="login.html">Login</a>
                 <a class="nav-item nav-link" href="perfil.html">Perfil</a>
-                <!-- Dropdown -->
+                <a class="nav-item nav-link" href="servicos.html">Serviço</a>
+                <a class="nav-item nav-link" href="agendamento.html">Agendamento</a>
                 <div class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="servicos.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Serviços
+                  <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Edição
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="servicos.html">Cadastro</a>
-                      <a class="dropdown-item" href="adm.html">Edição</a>
-                      <a class="dropdown-item" href="#">Opção 3</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Configurações</a>
-                  </div>
+                      <a class="dropdown-item" href="adm_servico.html">Edição de serviço</a>
+                      <a class="dropdown-item" href="adm.html">Edição de usuário</a>
                 </div>
-                <a class="nav-item nav-link" href="adm.html">Edição</a>
-                <a class="nav-item nav-link" href="agendamento.html">Agendamento</a>
               </div>
             </div>
         </nav>

@@ -1,5 +1,5 @@
 import './app.css'
-import App from './adm.svelte'
+import App from './Adm.svelte'
 
 const app = new App({
   target: document.getElementById('app'),

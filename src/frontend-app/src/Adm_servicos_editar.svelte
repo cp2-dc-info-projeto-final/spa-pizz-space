@@ -1,16 +1,13 @@
 <script>
-    import axios from "axios";
-  
-    // Configuração global para enviar cookies com todas as requisições
-    axios.defaults.withCredentials = true;
-  
-  let nomeS = '';
-  let descricao = '';
-  let preco = '';
-  let servicos = null;
+  import axios from "axios";
+  import Nav from "./componentes/Nav.svelte";
+
+  const api_base_url = "http://localhost:3000";
+
+  let servicos = [];
   let error = null;
   let resultado = null;
-  let colunas_servicos = null;
+  let colunas_servicos = ['nome', 'descricao', 'preco'];
   let editandoId = null;
   let formDataServico = {
     nomeS: '',
@@ -18,11 +15,10 @@
     preco: '',
   };
 
-  const api_base_url = "http://localhost:3000";
-
-  const carregarServicos = async () => {  
+  // Função para carregar os serviços da API
+  const carregarServicos = async () => {
     try {
-      let res = await axios.get(api_base_url + "/usuarios", {
+      const res = await axios.get(`${api_base_url}/servicos`, {
         responseType: "json",
         headers: {
           Accept: "application/json",
@@ -31,15 +27,16 @@
       servicos = res.data.servicos;
       error = null; // Limpa o erro se a requisição for bem-sucedida
     } catch (err) {
-      error = "Erro ao buscar dados: " + err.response?.data?.message || err.message;;
+      error = "Erro ao buscar dados: " + (err.response?.data?.message || err.message);
       console.error(err);
-      servicos = null; // Limpa o resultado em caso de erro
+      servicos = []; // Limpa os dados em caso de erro
     }
   };
 
+  // Função para atualizar um serviço
   const updateServico = async (id) => {
     try {
-      let res = await axios.post(`${api_base_url}/servicos/${id}`, formDataServico, {
+      const res = await axios.post(`${api_base_url}/servicos/${id}`, formDataServico, {
         headers: {
           Accept: "application/json",
         },
@@ -48,7 +45,7 @@
       if (res.status === 200) {
         console.log('Serviço atualizado:', res.data);
         resetarForm(); // Limpa o formulário
-        carregarServicos(); // Recarrega a lista de usuários
+        carregarServicos(); // Recarrega a lista de serviços
       } else {
         console.error('Erro ao atualizar o serviço:', res.statusText);
       }
@@ -58,25 +55,30 @@
     }
   };
 
+  // Função para alternar entre editar e visualizar
   const alternarServico = (id) => {
     if (editandoId === id) {
       resetarForm();
       return;
     }
     editandoId = id;
-    formDataServico = {
-      nomeS: servicos.find(user => user.id === id)?.nomeS || '',
-      descricao: servicos.find(user => user.id === id)?.descricao || '',
-      preco: servicos.find(user => user.id === id)?.preco || ''
-    
-    };
+    const servico = servicos.find(s => s.id === id);
+    if (servico) {
+      formDataServico = {
+        nomeS: servico.nomeS,
+        descricao: servico.descricao,
+        preco: servico.preco
+      };
+    }
   };
 
+  // Função para resetar o formulário
   const resetarForm = () => {
-    formDataServico = { nomeS: '',descricao: '', preco: ''};
+    formDataServico = { nomeS: '', descricao: '', preco: '' };
     editandoId = null;
   };
 
+  // Função para enviar o serviço (editar ou adicionar)
   const enviarServico = () => {
     console.log('Dados do formulário:', formDataServico);
     if (editandoId) {
@@ -85,18 +87,18 @@
     resetarForm(); // Fecha o formulário após o envio
   };
 
+  // Função para deletar um serviço
   const deletarServico = async (id) => {
     if (confirm('Tem certeza que deseja excluir este serviço?')) {
       try {
-        let res = await axios.delete(`${api_base_url}/servicos/${id}`, {
+        const res = await axios.delete(`${api_base_url}/servicos/${id}`, {
           headers: {
             Accept: "application/json",
           },
         });
         resultado = res.data;
         error = null;
-
-        carregarServicos(); // Recarrega a lista de usuários
+        carregarServicos(); // Recarrega a lista de serviços após deletar
       } catch (err) {
         error = "Erro ao deletar serviço: " + (err.response?.data?.message || err.message);
         console.error(err);
@@ -104,16 +106,17 @@
     }
   };
 
+  // Carregar os serviços ao inicializar o componente
   carregarServicos();
 </script>
-
+  <Nav/>
 <main>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <div class="div1">
     <div class="card">
-      {#if servicos}
+      {#if servicos && servicos.length > 0}
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -127,7 +130,7 @@
             {#each servicos as linha_servico}
               <tr>
                 {#each colunas_servicos as atributo}
-                  <td>{linha_servico[atributo]}</td>
+                  <td>{linha_servico[atributo]}</td> <!-- Acesso de forma dinâmica aos dados -->
                 {/each}
                 <td>
                   <button class="btn btn-danger" on:click={() => deletarServico(linha_servico.id)}>Remover</button>
@@ -151,11 +154,11 @@
             </div>
             <div class="mb-5">
               <label for="descricao" class="form-label">Descrição</label>
-              <input type="text" id="descricao" class="form-control" bind:value={formDataServico.descricaol} required />
+              <input type="text" id="descricao" class="form-control" bind:value={formDataServico.descricao} required />
             </div>
             <div class="mb-5">
               <label for="preco" class="form-label">Preço</label>
-              <input type="num" id="preco" class="form-control" bind:value={formDataServico.preco} required />
+              <input type="number" id="preco" class="form-control" bind:value={formDataServico.preco} required />
             </div>
             <button type="submit" class="btn btn-primary">Salvar</button>
           </form>
