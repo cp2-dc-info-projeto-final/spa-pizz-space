@@ -7,7 +7,7 @@
   let servicos = [];
   let error = null;
   let resultado = null;
-  let colunas_servicos = ['nome', 'descricao', 'preco'];
+  let colunas_servicos = ['nomeS', 'descricao', 'preco'];
   let editandoId = null;
   let formDataServico = {
     nomeS: '',

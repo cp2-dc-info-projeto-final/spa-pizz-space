@@ -89,7 +89,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <div class="div1">
     <div class="form-container">
-      <h2>Cadastro</h2>
+      <h2>Cadastro de Serviço</h2>
       <form class="form" on:submit|preventDefault={cadastrarServicos}>
         <div class="form-group">
           <label for="nomeS">Nome do serviço:</label>

@@ -1,6 +1,7 @@
 <script>
   import axios from "axios";
   import Nav from "./componentes/Nav.svelte";
+
   let nome = "";
   let email = "";
   let data_nasc = "";
@@ -95,7 +96,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <div class="div1">
     <div class="form-container">
-      <h2>Cadastro</h2>
+      <h2><p>Cadastro</p></h2>
       <form class="form" on:submit|preventDefault={cadastrarUsuario}>
         <div class="form-group">
           <label for="nome">Nome:</label>
