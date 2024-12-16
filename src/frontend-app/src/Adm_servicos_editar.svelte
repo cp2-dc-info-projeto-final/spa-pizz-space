@@ -3,6 +3,7 @@
   import Nav from "./componentes/Nav.svelte";
 
   const api_base_url = "http://localhost:3000";
+  axios.defaults.withCredentials = true;
 
   let servicos = [];
   let error = null;
@@ -41,6 +42,7 @@
           Accept: "application/json",
         },
       });
+      console.log (res)
 
       if (res.status === 200) {
         console.log('Serviço atualizado:', res.data);
@@ -57,20 +59,21 @@
 
   // Função para alternar entre editar e visualizar
   const alternarServico = (id) => {
-    if (editandoId === id) {
-      resetarForm();
-      return;
-    }
-    editandoId = id;
-    const servico = servicos.find(s => s.id === id);
-    if (servico) {
-      formDataServico = {
-        nomeS: servico.nomeS,
-        descricao: servico.descricao,
-        preco: servico.preco
-      };
-    }
-  };
+  console.log('Alternando para o serviço com ID:', id);
+  if (editandoId === id) {
+    resetarForm();
+    return;
+  }
+  editandoId = id;
+  const servico = servicos.find(s => s.id === id);
+  if (servico) {
+    formDataServico = {
+      nomeS: servico.nomeS,
+      descricao: servico.descricao,
+      preco: servico.preco
+    };
+  }
+};
 
   // Função para resetar o formulário
   const resetarForm = () => {
@@ -80,31 +83,39 @@
 
   // Função para enviar o serviço (editar ou adicionar)
   const enviarServico = () => {
-    console.log('Dados do formulário:', formDataServico);
-    if (editandoId) {
-      updateServico(editandoId);
-    }
-    resetarForm(); // Fecha o formulário após o envio
-  };
+  console.log('Dados do formulário:', formDataServico);
+  if (editandoId) {
+    console.log('Editando serviço com ID:', editandoId);
+    updateServico(editandoId);
+  } else {
+    console.log('Adicionando novo serviço');
+  }
+  resetarForm(); // Fecha o formulário após o envio
+};
 
   // Função para deletar um serviço
   const deletarServico = async (id) => {
-    if (confirm('Tem certeza que deseja excluir este serviço?')) {
-      try {
-        const res = await axios.delete(`${api_base_url}/servicos/${id}`, {
-          headers: {
-            Accept: "application/json",
-          },
-        });
-        resultado = res.data;
-        error = null;
-        carregarServicos(); // Recarrega a lista de serviços após deletar
-      } catch (err) {
-        error = "Erro ao deletar serviço: " + (err.response?.data?.message || err.message);
-        console.error(err);
-      }
+  if (confirm('Tem certeza que deseja excluir este serviço?')) {
+    try {
+      console.log('Deletando serviço com ID:', id); // Verifica o ID passado
+      const res = await axios.delete(`${api_base_url}/servicos/${id}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      
+      // Verifica a resposta da API
+      console.log('Resposta da API ao deletar serviço:', res);
+      
+      resultado = res.data; // Aqui você armazena o resultado da exclusão, caso precise de algum retorno
+      error = null; // Limpa o erro, se houver
+      carregarServicos(); // Recarrega a lista de serviços após deletar
+    } catch (err) {
+      error = "Erro ao deletar serviço: " + (err.response?.data?.message || err.message);
+      console.error('Erro ao deletar o serviço:', err);
     }
-  };
+  }
+};
 
   // Carregar os serviços ao inicializar o componente
   carregarServicos();

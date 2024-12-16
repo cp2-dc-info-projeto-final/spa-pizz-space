@@ -1,6 +1,7 @@
 <script>
   import axios from "axios";
   import Nav from "./componentes/Nav.svelte";
+  axios.defaults.withCredentials = true;
 
   let idServico = '';
   let data = '';

@@ -73,6 +73,7 @@ async function login(req, res) {
       const token = geraAcessoJWT(idUsuario); // gera um token de sessão para o usuário
 
       console.log(`Usuário ${email} logado com sucesso!\nToken: ${token}`);      
+      
 
       // após realizar login, vá nas ferramentas do desenvolvedor do navegador, na aba Application, em Cookies, e veja o cookie SessionID
       res.cookie("SessionID", token, options); // preenche o token na resposta para ser utilizado pelo cliente nas próximas requisições
