@@ -2,6 +2,7 @@
   import axios from "axios";
   import Nav from "./componentes/Nav.svelte";
 
+
   let nomeS = '';
   let descricao = '';
   let preco = '';
@@ -71,6 +72,7 @@
       resultado = res.data;
       error = null; // Limpa o erro se a requisição for bem-sucedida
       // recarrega lista de usuários apresentada
+      
       carregarServicos();
     } catch (err) {
       error =

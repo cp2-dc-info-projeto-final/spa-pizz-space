@@ -384,13 +384,13 @@ app.get('/servicos', (req, res) => {
   });
 });
 
-app.post('/servicos', async (req, res) => {
+app.post('/servicos', verificaToken, async (req, res) => {
   const { nomeS, descricao, preco } = req.body;
 
   const validarCampos = () => {
     if (!nomeS || nomeS.length < 1) return 'Nome é obrigatório.';
     if (!descricao || descricao.length < 1) return 'Descrição é obrigatória.';
-    if (isNaN(preco) || parseFloat(preco) <= 50) return 'Preço deve ser maior que 50.';
+    if (isNaN(preco) || parseFloat(preco) <= 0) return 'Preço deve ser maior que 0.';
     return null;
   };
   console.log('oi')
