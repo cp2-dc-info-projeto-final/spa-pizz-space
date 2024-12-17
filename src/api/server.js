@@ -393,7 +393,7 @@ app.get('/servicos', (req, res) => {
   });
 });
 
-app.post('/servicos', verificaToken, async (req, res) => {
+app.post('/servicos/novo', verificaToken, async (req, res) => {
   const { nomeS, descricao, preco } = req.body;
 
   const validarCampos = () => {
