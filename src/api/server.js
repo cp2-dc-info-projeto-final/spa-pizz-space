@@ -509,14 +509,12 @@ app.post('/agendamentos', (req, res) => {
   const { id_servico, data, horario } = req.body;
   const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
   console.log(id_servico + " " + data + " " + horario);
-
   if (!id_servico|| !data || !horario) {
       return res.status(400).json({
           status: 'failed',
           message: 'Preencha todos os campos obrigatórios!',
       });
   }
-
   let db = connectToDatabase();
 
   db.run(
