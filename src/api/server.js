@@ -504,17 +504,18 @@ app.post('/servicos/:id', verificaToken, async (req, res) => {
     });
 });
 
-app.post('/agendamentos', (req, res) => {
+app.post('/agendamentos', verificaToken, (req, res) => {
   console.log("Entrou em agendamentos");
   const { id_servico, data, horario } = req.body;
   const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
-  console.log(id_servico + " " + data + " " + horario);
+  console.log(id_usuario + " " + id_servico + " " + data + " " + horario);
   if (!id_servico|| !data || !horario) {
       return res.status(400).json({
           status: 'failed',
           message: 'Preencha todos os campos obrigatórios!',
       });
   }
+
   let db = connectToDatabase();
 
   db.run(
@@ -523,6 +524,7 @@ app.post('/agendamentos', (req, res) => {
       function (err) {
           if (err) {
               db.close();
+              console.log(err.message);
               return res.status(500).json({
                   status: 'failed',
                   message: 'Erro ao criar o agendamento!',
@@ -531,13 +533,13 @@ app.post('/agendamentos', (req, res) => {
           }
 
           db.close();
-          res.status(201).json({
+          res.status(200).json({
               status: 'success',
               message: 'Agendamento criado com sucesso!',
               agendamento: {
                   id_agendamento: this.lastID,
                   id_usuario,
-                  id,
+                  id_servico,
                   data,
                   horario,
               },
@@ -554,12 +556,13 @@ app.get('/agendamentos', verificaToken, (req, res) => {
   db.all(
       `SELECT a.id_agendamento, a.data, a.horario, s.nomeS AS servico
        FROM agendamentos a
-       JOIN servicos s ON a.id = s.id
-       WHERE a.id_usuario = ?`, //talvez o erro esteja aqui!
+       JOIN servicos s ON a.id_servico = s.id
+       WHERE a.id_usuario = ?`,
       [id_usuario],
       (err, rows) => {
           if (err) {
               db.close();
+              console.log(err.message);
               return res.status(500).json({
                   status: 'failed',
                   message: 'Erro ao buscar agendamentos!',
@@ -568,6 +571,7 @@ app.get('/agendamentos', verificaToken, (req, res) => {
           }
 
           db.close();
+          console.log("tamanho da lista: " +rows.length);
           res.status(200).json({
               status: 'success',
               agendamentos: rows,
@@ -575,7 +579,6 @@ app.get('/agendamentos', verificaToken, (req, res) => {
       }
   );
 });
-
 
 // Iniciar o servidor
 app.listen(port, () => {
