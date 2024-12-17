@@ -83,6 +83,15 @@ async function login(req, res) {
         });
     }
 
+    else {
+      // Usuário não encontrado
+      console.log(`Usuário com email ${email} não existe.`);
+      return res.status(404).json({
+          status: 'failed',
+          message: 'Usuário não existe!',
+      });
+    }
+
     db.close((err) => {
       if (err) {
         console.log(err.message);
@@ -497,11 +506,11 @@ app.post('/servicos/:id', verificaToken, async (req, res) => {
 
 app.post('/agendamentos', (req, res) => {
   console.log("Entrou em agendamentos");
-  const { id, data, horario } = req.body;
+  const { id_servico, data, horario } = req.body;
   const id_usuario = req.idUsuario; // Recuperado do middleware `verificaToken`
-  console.log(id + " " + data + " " + horario);
+  console.log(id_servico + " " + data + " " + horario);
 
-  if (!id|| !data || !horario) {
+  if (!id_servico|| !data || !horario) {
       return res.status(400).json({
           status: 'failed',
           message: 'Preencha todos os campos obrigatórios!',
@@ -511,8 +520,8 @@ app.post('/agendamentos', (req, res) => {
   let db = connectToDatabase();
 
   db.run(
-      'INSERT INTO agendamentos (id_usuario, id, data, horario) VALUES (?, ?, ?, ?)',
-      [id_usuario, id, data, horario],
+      'INSERT INTO agendamentos (id_usuario, id_servico, data, horario) VALUES (?, ?, ?, ?)',
+      [id_usuario, id_servico, data, horario],
       function (err) {
           if (err) {
               db.close();

@@ -42,7 +42,7 @@
     loading = true;
     try {
       const res = await axios.post(api_base_url + "/agendamentos", {
-        id: idServico,
+        id_servico: idServico,
         data: data,
         horario: horario,
       });
