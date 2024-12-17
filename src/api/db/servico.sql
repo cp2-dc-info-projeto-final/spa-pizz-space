@@ -1,6 +1,0 @@
-CREATE TABLE servicos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nomeS TEXT NOT NULL,
-  descricao TEXT NOT NULL,
-  preco REAL NOT NULL
-);
