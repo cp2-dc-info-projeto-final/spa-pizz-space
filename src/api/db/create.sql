@@ -4,7 +4,7 @@ CREATE TABLE usuario(
     email text NOT NULL UNIQUE,
     data_nasc date NOT NULL,
     num_cell numeric NOT NULL UNIQUE,
-    senha text NOT NULL
+    senha text NOT NULL,
     role text DEFAULT
     );
 

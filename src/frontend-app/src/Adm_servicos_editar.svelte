@@ -126,6 +126,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <div class="div1">
+    <h2>Edição de serviços</h2>
     <div class="card">
       {#if servicos && servicos.length > 0}
         <table class="table table-bordered">

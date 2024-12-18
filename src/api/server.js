@@ -41,6 +41,67 @@ function geraAcessoJWT(idUsuario) {
   });
 };
 
+//Cria as tabelas do banco de dados, caso já não tenham sido criadas
+const initDatabase = () => {
+  const db = connectToDatabase();
+
+  // Criação da tabela `usuario`
+  db.run(
+    `CREATE TABLE IF NOT EXISTS usuario (
+      id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome text NOT NULL, 
+      email text NOT NULL UNIQUE,
+      data_nasc date NOT NULL,
+      num_cell numeric NOT NULL UNIQUE,
+      senha text NOT NULL
+    )`,
+    (err) => {
+      if (err) console.error("Erro ao criar tabela `usuario`:", err.message);
+      else console.log("Tabela `usuario` verificada/criada com sucesso.");
+    }
+  );
+
+  // Criação da tabela `servicos`
+  db.run(
+    `CREATE TABLE IF NOT EXISTS servicos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nomeS TEXT NOT NULL,
+      descricao TEXT NOT NULL,
+      preco REAL NOT NULL
+    )`,
+    (err) => {
+      if (err) console.error("Erro ao criar tabela `servicos`:", err.message);
+      else console.log("Tabela `servicos` verificada/criada com sucesso.");
+    }
+  );
+
+  // Criação da tabela `agendamentos`
+  db.run(
+    `CREATE TABLE IF NOT EXISTS agendamentos (
+      id_agendamento INTEGER PRIMARY KEY AUTOINCREMENT,
+      id_usuario INTEGER NOT NULL,
+      id_servico INTEGER NOT NULL,
+      data DATE NOT NULL,
+      horario TIME NOT NULL,
+      UNIQUE (id_servico, data, horario),
+      FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario) 
+          ON DELETE CASCADE ON UPDATE CASCADE,
+      FOREIGN KEY (id_servico) REFERENCES servicos (id) 
+          ON DELETE CASCADE ON UPDATE CASCADE
+    )`,
+    (err) => {
+      if (err) console.error("Erro ao criar tabela `agendamentos`:", err.message);
+      else console.log("Tabela `agendamentos` verificada/criada com sucesso.");
+    }
+  );
+
+  db.close((err) => {
+    if (err) console.error("Erro ao fechar conexão com banco de dados:", err.message);
+    else console.log("Conexão com banco de dados fechada após inicialização.");
+  });
+};
+
+
 async function login(req, res) {
   let db = connectToDatabase();
   const { email, senha } = req.body;
@@ -580,9 +641,9 @@ app.get('/agendamentos', verificaToken, (req, res) => {
   );
 });
 
+initDatabase();
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-
