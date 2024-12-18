@@ -129,7 +129,7 @@
     <h2>Edição de serviços</h2>
     <div class="card">
       {#if servicos && servicos.length > 0}
-        <table class="table table-bordered">
+        <table class="table table-bordered table-responsive">
           <thead>
             <tr>
               {#each colunas_servicos as nome_coluna}

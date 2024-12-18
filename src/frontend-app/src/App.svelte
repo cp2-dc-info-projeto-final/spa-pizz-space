@@ -97,7 +97,7 @@
   <div class="div1">
     <div class="form-container">
       <h2><p>Cadastro</p></h2>
-      <form class="form" on:submit|preventDefault={cadastrarUsuario}>
+      <form class="form table-responsive" on:submit|preventDefault={cadastrarUsuario}>
         <div class="form-group">
           <label for="nome">Nome:</label>
           <input

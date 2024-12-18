@@ -50,7 +50,7 @@
   <div class="div1">
     <div class="form-container">
       <h2>Login</h2>
-      <form class="form" on:submit|preventDefault={loginUsuario}>
+      <form class="form table-responsive" on:submit|preventDefault={loginUsuario}>
         <div>
           <label for="email">Email:</label><br>
           <input

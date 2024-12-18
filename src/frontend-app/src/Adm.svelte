@@ -122,7 +122,7 @@
     <h2>Edição</h2>
     <div class="card">
       {#if usuarios}
-        <table class="table table-bordered">
+        <table class="table table-bordered table-responsive">
           <thead>
             <tr>
               {#each colunas_usuarios as nome_coluna}
