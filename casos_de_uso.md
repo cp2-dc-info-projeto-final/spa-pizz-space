@@ -2,16 +2,15 @@
 
 ## Lista dos casos de uso
 - [CDU 01](#CDU-01): Cadastro de Administradores.
-- [CDU 02](#CDU-02): Cadastro de Funcionários.
-- [CDU 03](#CDU-03): Cadastro de Clientes.
-- [CDU 04](#CDU-04): Login de Usuários.
-- [CDU 05](#CDU-05): Cadastros de Serviços.
-- [CDU 06](#CDU-06): Disponibilização de Datas e Horários.
-- [CDU 07](#CDU-07): Agendamento de Serviços.
-- [CDU 08](#CDU-08): Cancelamento de Serviços.
-- [CDU 09](#CDU-09): Recuperar senha.
-- [CDU 10](#CDU-10): Visualizar Perfil.
-- [CDU 11](#CDU-11): Logout.
+- [CDU 02](#CDU-02): Cadastro de Clientes.
+- [CDU 03](#CDU-03): Login de Usuários.
+- [CDU 04](#CDU-04): Cadastros de Serviços.
+- [CDU 05](#CDU-05): Disponibilização de Datas e Horários.
+- [CDU 06](#CDU-06): Agendamento de Serviços.
+- [CDU 07](#CDU-07): Cancelamento de Serviços.
+- [CDU 08](#CDU-08): Recuperar senha.
+- [CDU 09](#CDU-09): Visualizar Perfil.
+- [CDU 10](#CDU-10): Logout.
 
 ## Descrição dos Casos de uso
 ### CDU 01
@@ -41,31 +40,6 @@ Cadastro de Administradores
 7. O sistema nega o cadastro.
 
 ### CDU 02
-Cadastro de Funcionários
-
-**Atores:** Administrador.
-
-**Fluxo principal**
- 
-1. O administrador clica no botão "Cadastrar Funcionário" na área de perfil.
-2. O administrador é direcionado para a página de cadastro de funcionários.
-3. O administrador insere os dados solicitados: nome completo, ID, especialidade, número de celular, email e senha.
-4. O administrador clica em "Realizar cadastro".
-5. O sistema verifica se os dados são válidos.
-6. O sistema registra as informações no banco de dados.
-7. O sistema exibe a mensagem "Cadastro realizado com sucesso!".
-
-**Fluxo alternativo A**
-
-1. O administrador clica no botão "Cadastrar Funcionário" na área de perfil.
-2. O administrador é direcionado para a página de cadastro de funcionários.
-3. O administrador insere os dados solicitados: nome completo, ID, especialidade, número de celular, email e senha.
-4. O administrador clica em "Realizar cadastro".
-5. O sistema verifica se os dados são válidos.
-6. O sistema informa que os dados já estão registrados.
-7. O sistema nega o cadastro.
-
-### CDU 03
 Cadastro de Clientes
 
 **Atores:** Cliente.
@@ -91,7 +65,7 @@ Cadastro de Clientes
 7. O sistema nega o cadastro.
 8. O sistema exibe a mensagem "Os dados inseridos já estão cadastrados".
 
-### CDU 04
+### CDU 03
 Login de Usuários
 
 **Atores:** Cliente, Funcionário e Administrador
@@ -142,7 +116,7 @@ Login de Usuários
 6. O sistema exibe a mensagem "Senha Inválida".
 7. O usuário repete o processo de login.
 
-### CDU 05
+### CDU 04
 Cadastros de Serviços
 
 **Atores:** Administrador.
@@ -163,7 +137,7 @@ Cadastros de Serviços
 4. Serviço já está cadastrado.
 5. O sistema exibe a mensagem "Serviço já cadastrado".
 
-### CDU 06
+### CDU 05
 Disponibilização de Datas e Horários
 
 **Atores:** Administrador.
@@ -195,7 +169,7 @@ Disponibilização de Datas e Horários
 10. O sistema exibe a mensagem: "Este horário já está cadastrado ou já possui um agendamento".    
 
 
-### CDU 07
+### CDU 06
 Agendamento de Serviços
 
 **Atores:** Cliente.
@@ -223,7 +197,7 @@ Agendamento de Serviços
 8. O cliente é direcionado para a página de cadastro/login.
 
 
-### CDU 08
+### CDU 07
 Cancelamento de Serviços
 
 **Atores:** Cliente.
@@ -235,7 +209,7 @@ Cancelamento de Serviços
 3. O sistema verifica se os dados são válidos.
 4. O cancelamento é concluído e as informações ficam disponíveis para agendamento novamente.
 
-### CDU 09
+### CDU 08
 Recuperar senha
 
 **Atores:** Cliente.
@@ -264,7 +238,7 @@ Recuperar senha
 6. O sistema exibe a mensagem: "Email inválido!".
 7. O cliente é redirecionado para a página de confirmação de email.
 
-### CDU 10
+### CDU 09
 Visualizar Perfil
 
 **Atores:** Cliente, Funcionário e Administrador.
@@ -293,7 +267,7 @@ Visualizar Perfil
       - Cadastro de Serviços.
       - Cadastro de Especialidades.
 
-### CDU 11
+### CDU 10
 Logout
 
 **Atores:** Cliente, Funcionário e Administrador.

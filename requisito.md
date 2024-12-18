@@ -9,17 +9,16 @@
 
 - RF3 - Os administradores deverão ter todos os acessos disponíveis no sistema.
 
-- RF4 - O sistema deverá salvar os agendamentos (Horário, Nome do cliente e contato de telefone).
+- RF4 - O sistema deverá salvar os agendamentos (Serviço, Data e Horário).
 
-- RF5 - O sistema deve ter preços, tempo e descrição das massagens.
+- RF5 - O sistema deve ter preços, tempo e descrição dos serviços.
 
 - RF6 - O sistema deverá mostrar horários disponíveis.
 
-- RF7 - Os serviços deverão possuir formas de pagamentos diferentes (dinheiro, cartão ou pix).
 
 ## Requisitos Não Funcionais:
 
-- RNF1 - O sistema deverá ser feito em JavaScript, HTML, CSS e NodeJS.
+- RNF1 - O sistema deverá ser feito em JavaScript, HTML, Svelte, Bootstrap, CSS e NodeJS.
 
 - RNF2 - O sistema não deve permitir que o usuário visualize dados privativos de outros usuários.
 
