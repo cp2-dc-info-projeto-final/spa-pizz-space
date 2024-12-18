@@ -237,8 +237,6 @@ app.post('/logout', (req, res) => {
   });
 });
 
-  
-
 app.get('/usuarios', verificaToken, (req, res) => {
   let db = new sqlite3.Database(databasePath, (err) => {
     if (err) {
@@ -639,6 +637,29 @@ app.get('/agendamentos', verificaToken, (req, res) => {
           });
       }
   );
+});
+
+app.delete('/agendamentos/:id_agendamento', verificaToken, (req, res) => {
+  const { id_agendamento } = req.params;
+
+  let db = connectToDatabase();
+
+  // Deletar o agendamento
+  db.run('DELETE FROM agendamentos WHERE id_agendamento = ?', [id_agendamento], function (err) {
+    if (err) {
+      db.close();
+      return res.status(500).json({
+        status: 'failed',
+        message: `Erro ao tentar remover o agendamento ${id_agendamento}!`,
+        error: err.message,
+      });
+    }
+    db.close();
+    return res.status(200).json({
+      status: 'success',
+      message: `Agendamento com id ${id_agendamento} removido com sucesso!`
+    });
+  });
 });
 
 initDatabase();

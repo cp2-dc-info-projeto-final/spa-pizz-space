@@ -7,6 +7,7 @@
   let data = '';
   let horario = '';
   let servicos = [];
+  let horariosDisponiveis = [];
   let agendamentos = [];
   let loading = false; // Variável para controlar o estado de carregamento
   const api_base_url = "http://localhost:3000";
@@ -20,6 +21,25 @@
       console.error("Erro ao carregar serviços:", err.message);
     }
   };
+
+  const horariosPadrao = [
+    "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00"
+  ];
+
+  const carregarHorariosDisponiveis = async () => {
+    if (!idServico || !data) {
+      horariosDisponiveis = []; // Certifique-se de limpar a lista se faltar algum campo
+      return;
+    }
+
+    const horariosOcupados = agendamentos
+      .filter(a => a.id_servico === idServico && a.data === data)
+      .map(a => a.horario);
+
+    horariosDisponiveis = horariosPadrao.filter(h => !horariosOcupados.includes(h));
+    console.log("Horários disponíveis:", horariosDisponiveis);
+  };
+
 
   // Função para carregar agendamentos
   const carregarAgendamentos = async () => {
@@ -60,6 +80,23 @@
     }
   };
 
+  const cancelarAgendamento = async (id) => {
+    const confirmar = confirm("Você tem certeza que deseja cancelar este agendamento?");
+    if (confirmar) {
+      loading = true;
+      try {
+        const res = await axios.delete(`${api_base_url}/agendamentos/${id}`);
+        alert("Agendamento cancelado com sucesso!");
+        carregarAgendamentos(); // Recarrega os agendamentos após cancelamento
+      } catch (err) {
+        console.error("Erro ao cancelar agendamento:", err.message);
+        alert("Erro ao cancelar o agendamento. Tente novamente.");
+      } finally {
+        loading = false;
+      }
+    }
+  };
+
   // Carregar serviços ao montar o componente
   carregarServicos();
   // Carregar os agendamentos ao montar o componente
@@ -80,7 +117,7 @@
             <div class="mb-3">
               <label for="servico" class="form-label">Serviço:</label>
               <select id="servico" bind:value={idServico} class="form-select">
-                <option disabled selected>Selecione um serviço</option>
+                <option value="" disabled={true} selected={idServico === ''}>Selecione um serviço</option>
                 {#each servicos as servico}
                   <option value={servico.id}>{servico.nomeS}</option>
                 {/each}
@@ -89,15 +126,28 @@
     
             <div class="mb-3">
               <label for="data" class="form-label">Data:</label>
-              <input type="date" id="data" bind:value={data} class="form-control" />
+              <input type="date" id="data" bind:value={data} class="form-control" on:change={carregarHorariosDisponiveis} />
             </div>
     
             <div class="mb-3">
               <label for="horario" class="form-label">Horário:</label>
-              <input type="time" id="horario" bind:value={horario} class="form-control" />
+              <select id="horario" bind:value={horario} class="form-select" disabled={!horariosDisponiveis.length}>
+                <option value="" disabled selected>
+                  {horariosDisponiveis.length > 0 ? "Selecione um horário" : "Nenhum horário disponível"}
+                </option>
+                {#each horariosDisponiveis as h}
+                  <option value={h}>{h}</option>
+                {/each}
+              </select>
             </div>
     
-            <button type="submit" disabled={loading}>Agendar</button>
+            <button type="submit" disabled={loading}>
+              {#if loading}
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agendando...
+              {:else}
+                Agendar
+              {/if}
+            </button>
           </form>
           {#if loading}
             <div class="spinner-border mt-3" role="status">
@@ -111,7 +161,10 @@
           {#if agendamentos.length > 0}
             <ul class="list-group">
               {#each agendamentos as agendamento}
-                <li class="list-group-item">{agendamento.servico} - {agendamento.data} {agendamento.horario}</li>
+                <li class="list-group-item d-flex justify-content-between">
+                  {agendamento.servico} - {agendamento.data} | {agendamento.horario}
+                  <button class="btn btn-danger btn-sm" on:click={() => cancelarAgendamento(agendamento.id_agendamento)}>Cancelar</button>
+                </li>
               {/each}
             </ul>
           {:else}
