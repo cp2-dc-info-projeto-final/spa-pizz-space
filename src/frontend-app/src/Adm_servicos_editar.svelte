@@ -127,9 +127,9 @@
 
   <div class="div1">
     <h2>Edição de serviços</h2>
-    <div class="card">
+    <div class="card table-responsive">
       {#if servicos && servicos.length > 0}
-        <table class="table table-bordered table-responsive">
+        <table class="table table-bordered">
           <thead>
             <tr>
               {#each colunas_servicos as nome_coluna}
