@@ -39,6 +39,11 @@
       return;
     }
 
+    if (new Date(data) < new Date()) {
+      alert("A data não pode ser no passado.");
+      return;
+    }
+
     loading = true;
     try {
       const res = await axios.post(api_base_url + "/agendamentos", {
