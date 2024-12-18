@@ -70,7 +70,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h1>Agendamento de Serviço</h1>
+          <h2>Agendamento de Serviço</h2>
           <form on:submit|preventDefault={agendarServico}>
             <div class="mb-3">
               <label for="servico" class="form-label">Serviço:</label>
