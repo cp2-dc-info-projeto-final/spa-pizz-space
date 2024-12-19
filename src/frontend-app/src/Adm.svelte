@@ -120,9 +120,9 @@
 
   <div class="div1">
     <h2>Edição</h2>
-    <div class="card">
+    <div class="card table-responsive">
       {#if usuarios}
-        <table class="table table-bordered table-responsive">
+        <table class="table table-bordered">
           <thead>
             <tr>
               {#each colunas_usuarios as nome_coluna}
