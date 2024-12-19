@@ -81,10 +81,9 @@
         {#if error}
             <p style="color: red;">{error}</p>
         {:else if usuarioLogado}
-            <h2>Dados do Usuário Logado</h2>
+            <h2>Bem-vindo, {usuarioLogado.nome}!</h2>
             
             <p><strong>ID:</strong> {usuarioLogado.idUsuario}</p>
-            <p><strong>Nome:</strong> {usuarioLogado.nome}</p>
             <p><strong>E-mail:</strong> {usuarioLogado.email}</p>
 
             <button on:click={logout}>Logout</button>

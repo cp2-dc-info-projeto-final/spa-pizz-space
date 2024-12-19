@@ -9,7 +9,8 @@
   let servicos = [];
   let horariosDisponiveis = [];
   let agendamentos = [];
-  let loading = false; // Variável para controlar o estado de carregamento
+  let loading = false;
+  let mensagemErro = '';  // Variável para armazenar a mensagem de erro
   const api_base_url = "http://localhost:3000";
 
   // Carregar lista de serviços
@@ -26,12 +27,14 @@
     "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00"
   ];
 
+  // Carregar horários disponíveis
   const carregarHorariosDisponiveis = async () => {
     if (!idServico || !data) {
-      horariosDisponiveis = []; // Certifique-se de limpar a lista se faltar algum campo
+      horariosDisponiveis = [];
       return;
     }
 
+    // Pegue os horários ocupados para o serviço e data específicos
     const horariosOcupados = agendamentos
       .filter(a => a.id_servico === idServico && a.data === data)
       .map(a => a.horario);
@@ -40,8 +43,7 @@
     console.log("Horários disponíveis:", horariosDisponiveis);
   };
 
-
-  // Função para carregar agendamentos
+  // Carregar agendamentos
   const carregarAgendamentos = async () => {
     try {
       const res = await axios.get(api_base_url + "/agendamentos");
@@ -52,10 +54,21 @@
     }
   };
 
-  // Agendar serviço
+  // Função para agendar o serviço
   const agendarServico = async () => {
+    // Resetar a mensagem de erro
+    mensagemErro = '';
+
     if (!idServico || !data || !horario) {
       alert("Preencha todos os campos antes de agendar!");
+      return;
+    }
+
+    // Verificação no frontend: Não permitir que o usuário agende dois serviços no mesmo horário
+    const agendamentoExistente = agendamentos.some(a => a.data === data && a.horario === horario);
+
+    if (agendamentoExistente) {
+      mensagemErro = "Já existe um agendamento para este horário.";
       return;
     }
 
@@ -72,6 +85,7 @@
         horario: horario,
       });
       alert("Serviço agendado com sucesso!");
+      carregarAgendamentos();  // Recarregar os agendamentos
     } catch (err) {
       console.error("Erro ao agendar serviço:", err.message);
       alert("Erro ao agendar o serviço. Tente novamente.");
@@ -97,9 +111,8 @@
     }
   };
 
-  // Carregar serviços ao montar o componente
+  // Carregar serviços e agendamentos ao montar o componente
   carregarServicos();
-  // Carregar os agendamentos ao montar o componente
   carregarAgendamentos();
 </script>
 
@@ -140,6 +153,12 @@
                 {/each}
               </select>
             </div>
+
+            {#if mensagemErro}
+              <div class="alert alert-danger" role="alert">
+                {mensagemErro}
+              </div>
+            {/if}
     
             <button type="submit" disabled={loading}>
               {#if loading}
@@ -149,11 +168,6 @@
               {/if}
             </button>
           </form>
-          {#if loading}
-            <div class="spinner-border mt-3" role="status">
-              <span class="visually-hidden">Carregando...</span>
-            </div>
-          {/if}
         </div>
         
         <div class="col-md-6">
