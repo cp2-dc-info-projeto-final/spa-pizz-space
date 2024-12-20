@@ -1,15 +1,14 @@
 ﻿# Documento de Casos de Uso
 
 ## Lista dos casos de uso
-- [CDU 01](#CDU-01): Cadastro de Administradores.
-- [CDU 02](#CDU-02): Cadastro de Clientes.
-- [CDU 03](#CDU-03): Login de Usuários.
-- [CDU 04](#CDU-04): Disponibilização de data e horário.
+- [CDU 01](#CDU-01): Cadastro de Clientes.
+- [CDU 02](#CDU-02): Login de Usuários.
+- [CDU 03](#CDU-03): Disponibilização de data e horário.
 - [CDU 04](#CDU-04): Cadastros de Serviços.
 - [CDU 05](#CDU-05): Agendamento de Serviços.
 - [CDU 06](#CDU-06): Cancelamento de Serviços.
 - [CDU 07](#CDU-07): Visualizar Perfil.
-- [CDU 8](#CDU-08): Logout.
+- [CDU 08](#CDU-08): Logout.
 
 ## Descrição dos Casos de uso
 
